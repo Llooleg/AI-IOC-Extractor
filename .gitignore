@@ -47,6 +47,9 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# Downloaded data files
 .pdf
 .html
+.csv
 
