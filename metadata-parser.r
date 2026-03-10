@@ -1,5 +1,6 @@
 library(aRxiv)
 library(jsonlite)
+library(oai)
 my_category <- "cs.CR"
 total_count <- arxiv_count(query = paste0("cat:", my_category))
 max_papers <- min(total_count, 5000)
