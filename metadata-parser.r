@@ -1,63 +1,103 @@
 library(aRxiv)
 library(jsonlite)
+
 my_category <- "cs.CR"
 total_count <- arxiv_count(query = paste0("cat:", my_category))
-max_papers <- min(total_count, 5000)
+max_papers <- min(total_count, 10000)
 batch_size <- 100
 all_results <- data.frame()
+
 cat("Enter path to download files: ")
 download_path <- readline()
 full_path <- file.path(download_path, "metadata.json")
+temp_path <- file.path(download_path, "metadata_partial.json")  # our insurance policy
+
 if (!dir.exists(download_path)) dir.create(download_path, recursive = TRUE)
+
+# ── Helper: save whatever we have so far, no questions asked ──────────────────
+save_progress <- function(df, path) {
+  tryCatch({
+    write(toJSON(df, pretty = TRUE), path)
+  }, error = function(e) {
+    warning("Tried to save progress, failed miserably: ", conditionMessage(e))
+  })
+}
+
+# ── Resume logic ──────────────────────────────────────────────────────────────
 if (file.exists(full_path)) {
   existing_metadata <- jsonlite::fromJSON(full_path)
   already_saved_count <- nrow(existing_metadata)
-
   cat("We already have", already_saved_count, "papers.\n")
+  difference <- total_count - already_saved_count
 
-  fresh_data <- arxiv_search(
-    query = paste0("cat:", my_category),
-    start = already_saved_count,
-    limit = 10,
-    sort_by = "submitted",
-    ascending = FALSE
-  )
+  if (difference > 0) {
+    cat("Fetching", difference, "missing papers.\n")
+    all_results <- existing_metadata 
+    pb <- txtProgressBar(min = 0, max = difference, style = 3)
 
-  new_papers <- fresh_data[!(fresh_data$id %in% existing_metadata$id), ]
+    for (i in seq(0, difference - 1, by = batch_size)) {
+      tryCatch({
+        batch <- arxiv_search(
+          query = paste0("cat:", my_category),
+          start = already_saved_count + i,
+          limit = batch_size,
+          sort_by = "submitted",
+          ascending = FALSE
+        )
+        all_results <- rbind(all_results, batch)
+        setTxtProgressBar(pb, i + nrow(batch))
 
-  if (nrow(new_papers) > 0) {
-    message(sprintf("Adding %d new entries...", nrow(new_papers)))
+        save_progress(all_results, temp_path)
+        Sys.sleep(1)
 
-    combined <- rbind(existing_metadata, new_papers)
+      }, error = function(e) {
+        message("\nSomething broke at batch starting ", i, ": ", conditionMessage(e))
+        message("Partial results saved to: ", temp_path_)
 
-    write_json(combined, full_path, pretty = TRUE)
+      })
+      Sys.sleep(1)
+    }
 
-    cat("File updated. Current row count:", nrow(combined), "\n")
-    message("Metadata updated. Exiting.")
+    close(pb)
+    write(toJSON(all_results, pretty = TRUE), full_path)
+    if (file.exists(temp_path)) file.remove(temp_path)
+    message("Metadata updated. ", nrow(all_results), " papers total.")
     q(save = "no", status = 0)
   } else {
-    message("Data is up to date. Exiting.")
+    message("Nothing new to fetch")
     q(save = "no", status = 0)
   }
 }
 
+# ── Fresh download ────────────────────────────────────────────────────────────
+cat("Fresh start. Fetching up to", max_papers, "papers...\n")
 pb <- txtProgressBar(min = 0, max = max_papers, style = 3)
 
 for (i in seq(0, max_papers - 1, by = batch_size)) {
-  batch <- arxiv_search(
-    query = paste0("cat:", my_category),
-    start = i,
-    limit = batch_size,
-    sort_by = "submitted",
-    ascending = FALSE
-  )
-  all_results <- rbind(all_results, batch)
-  setTxtProgressBar(pb, i + nrow(batch))
+  tryCatch({
+    batch <- arxiv_search(
+      query = paste0("cat:", my_category),
+      start = i,
+      limit = batch_size,
+      sort_by = "submitted",
+      ascending = FALSE
+    )
+    all_results <- rbind(all_results, batch)
+    setTxtProgressBar(pb, i + nrow(batch))
+
+    # Save partial progress after every batch
+    save_progress(all_results, temp_path)
+
+  }, error = function(e) {
+    message("\nCrashed at batch starting ", i, ": ", conditionMessage(e))
+    message("Saved ", nrow(all_results), " papers to: ", temp_path)
+  })
   Sys.sleep(1)
 }
 
 close(pb)
+write(toJSON(all_results, pretty = TRUE), full_path)
+if (file.exists(temp_path)) file.remove(temp_path)
+cat("Done.", nrow(all_results), "papers saved to", full_path, "\n")
 
-json_data <- toJSON(all_results, pretty = TRUE)
-write(json_data, file.path(download_path, "metadata.json"))
-data <- fromJSON(file.path(download_path, "metadata.json"))
+data <- fromJSON(full_path)
