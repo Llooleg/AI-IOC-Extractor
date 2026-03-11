@@ -1,0 +1,28 @@
+---
+title: Test presentation
+author: EG Team
+format: revealjs
+---
+
+# Актуальность
+
+## "А это вообще нужно?"
+:::: {.columns}
+:::{.column width="30%"}
+- 1
+
+
+- 2
+
+
+:::
+:::{.column width="70%"}
+ответ 1
+
+
+ответ 2
+
+
+:::
+::::
+
