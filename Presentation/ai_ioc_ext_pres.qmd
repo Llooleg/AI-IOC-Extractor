@@ -214,73 +214,177 @@ format:
 ::: {.absolute top=0 left=-10000, data-id="box1" style="background: white; width: 10000px; height: 100000px; border-radius: 200px; margin: -5000px 0 0 -5000px;"}
 :::
 
-# Технологическая концепция
+# СТРУКТУРА ПРОЕКТА {background-color="black"}
 
-### Архитектура платформы
+## {auto-animate=true, background-color="black"}
 
-<pre style="font-family: monospace; line-height: 1.3; background-color: rgba(255,255,255,0.1); padding: 15px; border-radius: 5px; font-size: 0.7em;">
-┌─────────────────────────────────────────────────────────────────┐
-│                         СБОР ДАННЫХ                             │
-├─────────────────────────────────────────────────────────────────┤
-│  Парсеры    │  API научных  │  RSS‑ленты   │  Ручное            │
-│  источников │  баз          │  блогов      │  добавление        │
-└─────────────┴───────────────┴──────────────┴────────────────────┘
-                              ↓
-┌─────────────────────────────────────────────────────────────────┐
-│                         ОБРАБОТКА                               │
-├─────────────────────────────────────────────────────────────────┤
-│  Очистка и    │  Выделение    │  Генерация    │  Классификация  │
-│  нормализация │  сущностей    │  эмбеддингов  │  по темам       │
-└───────────────┴───────────────┴───────────────┴─────────────────┘
-</pre>
+::: {.absolute top=200 left=0 width="10000" height="300"}
+Как мы создавали AI IOC Extractor
+:::
 
-## Ключевые технологии
+## {auto-animate=true, background-color="black"}
 
-| Компонент | Технологии | Назначение |
-|----------|------------|------------|
-| **Бэкенд** | Python, FastAPI | Основная логика приложения |
-| **Векторизация** | ruBERT, SentenceTransformers | Преобразование текста в эмбеддинги |
-| **Векторное хранилище** | FAISS, Qdrant | Поиск по семантической близости |
-| **База данных** | PostgreSQL | Хранение метаданных |
-| **Фронтенд** | React, TypeScript | Пользовательский интерфейс |
+::: {.absolute top=200 left=0 width="10000" height="300"}
+Как мы создавали AI IOC Extractor
 
-## Практическая значимость
+**3 ключевых этапа:**
+:::
 
-### Целевая аудитория и выгоды
+## {auto-animate=true, background-color="black"}
 
-**Студенты и начинающие**
-- Быстрый вход в профессию
-- Структурированные знания
+::: {.absolute top=200 left=0 width="10000" height="300"}
+Как мы создавали AI IOC Extractor
 
-**Практикующие специалисты**
-- Оперативный поиск по угрозам
-- Доступ к техническим деталям
+**3 ключевых этапа:**
 
-**Исследователи и аналитики**
-- Выявление трендов
-- Анализ связей между атаками
+1. **Сбор данных** — парсинг arXiv.org и создание базы
+:::
 
-**Регуляторы**
-- Реальная картина угроз
-- Актуализация требований
+## {auto-animate=true, background-color="black"}
 
-## Контакты
+::: {.absolute top=200 left=0 width="10000" height="300"}
+Как мы создавали AI IOC Extractor
 
-### Команда проекта «EG»
+**3 ключевых этапа:**
 
-**Безлепкин Л.А.** — архитектор решения<br>
-**Демидов Б.Ю.** — ведущий разработчик<br>
-**Лебедев О.Н.** — ML‑инженер<br>
-**Настепанин И.Д.** — аналитик данных<br>
-**Плохих Г.А.** — фронтенд‑разработчик
+1. **Сбор данных** — парсинг arXiv.org и создание базы
+2. **ИИ-поиск** — обучение нейросети для понимания запросов
+:::
+
+## {auto-animate=true, background-color="black"}
+
+::: {.absolute top=200 left=0 width="10000" height="300"}
+Как мы создавали AI IOC Extractor
+
+**3 ключевых этапа:**
+
+1. **Сбор данных** — парсинг arXiv.org и создание базы
+2. **ИИ-поиск** — обучение нейросети для понимания запросов
+3. **Веб-сайт** — интерфейс для поиска статей
+:::
+
+# ЭТАП 1: СБОР ДАННЫХ {background-color="black"}
+
+## {auto-animate=true, background-color="black"}
+
+::: {.absolute top=150 left=0 width="10000" height="300"}
+**Источник:** arXiv.org
+:::
+
+## {auto-animate=true, background-color="black"}
+
+::: {.absolute top=150 left=0 width="10000" height="300"}
+**Источник:** arXiv.org
+
+**Язык:** R
+:::
+
+## {auto-animate=true, background-color="black"}
+
+::: {.absolute top=150 left=0 width="10000" height="300"}
+**Источник:** arXiv.org
+
+**Язык:** R
+
+**Пакеты:** aRxiv, tidyverse, DBI, RSQLite
+:::
+
+
+
+
+# ЭТАП 2: ИИ-ПОИСК {background-color="black"}
+
+## {auto-animate=true, background-color="black"}
+
+::: {.absolute top=150 left=0 width="10000" height="300"}
+**Задача:** Научить систему понимать смысл запроса
+:::
+
+## {auto-animate=true, background-color="black"}
+
+::: {.absolute top=150 left=0 width="10000" height="300"}
+**Задача:** Научить систему понимать смысл запроса
+
+**Технология:** Нейросеть ruBERT
+:::
+
+## {auto-animate=true, background-color="black"}
+
+::: {.absolute top=150 left=0 width="10000" height="300"}
+**Задача:** Научить систему понимать смысл запроса
+
+**Технология:** Нейросеть ruBERT
+
+**Язык:** Python
+:::
+
+
+
+# ЭТАП 3: ВЕБ-САЙТ {background-color="black"}
+
+## {auto-animate=true, background-color="black"}
+
+::: {.absolute top=150 left=0 width="10000" height="300"}
+**Задача:** Сделать поиск доступным через браузер
+:::
+
+## {auto-animate=true, background-color="black"}
+
+::: {.absolute top=150 left=0 width="10000" height="300"}
+**Задача:** Сделать поиск доступным через браузер
+
+**Технология:** Shiny (веб-фреймворк для R)
+:::
+
+## {auto-animate=true, background-color="black"}
+
+::: {.absolute top=150 left=0 width="10000" height="300"}
+**Задача:** Сделать поиск доступным через браузер
+
+**Технология:** Shiny (веб-фреймворк для R)
+
+**Связка:** R + Python (reticulate)
+:::
+
+# ИТОГИ {background-color="black"}
+
+## {auto-animate=true, background-color="black"}
+
+### Что планируется сделать
+
+**Сбор данных:** Скрипт на R для парсинга arXiv.org (45000+ статей)
+
+**База данных:** 
+
+**ИИ-поиск:** Нейросеть ruBERT для семантического понимания запросов
+
+**Веб-сайт:** Shiny-приложение с интеграцией Python
+
+## {auto-animate=true, background-color="black"}
+
+### Стек технологий
+
+| Этап | Язык | Инструменты |
+|------|------|-------------|
+| Сбор данных | **R** | aRxiv, tidyverse, DBI, RSQLite |
+| ИИ-поиск | **Python** | sentence-transformers, ruBERT |
+| Веб-сайт | **R + Python** | Shiny, reticulate |
+
+## Контакты {background-color="black"}
+
+### Команда проекта «AI IOC Extractor»
 
 <div style="margin-top: 40px; padding: 20px; background-color: rgba(255, 255, 255, 0.05); border-radius: 8px;">
 
-**Email**: team@secure-knowledge.ru<br>
 **GitHub**: https://github.com/Llooleg/AI-IOC-Extractor/tree/Presentation<br>
 **Telegram**: https://t.me/+KLvdo-ZnRCpmNDc6
 
-
 </div>
 
+---
 
+## {auto-animate=true, background-color="black"}
+
+### Спасибо за внимание!
+
+Готовы ответить на ваши вопросы.
