@@ -5,7 +5,7 @@ author: "..."
 date: "2026-03-11"
 format:
   revealjs:
-    theme: simple
+    theme: [custom.scss]
     transition: fade
     transition-speed: slow
     margin: 0.1
@@ -29,7 +29,7 @@ format:
 :::
 
 ::: {.absolute top=200 left=0 width="10000" height="300"}
-Почему же именно без нашего решения вы <span style="color: red">НЕ</span> ВЫЖИВЕТЕ?
+<span style="color: black">Почему же именно без нашего решения вы</span> <span style="color: red">НЕ</span> <span style="color: black">ВЫЖИВЕТЕ?</span>
 :::
 
 ## {auto-animate=true, background-color="black"}
@@ -38,26 +38,10 @@ format:
 :::
 
 ::: {.absolute top=200 left=0 width="10000" height="300"}
-<span style="color: red">НЕ</span>
+<span style="color: black">Почему же именно без нашего решения вы</span> <span style="color: red">НЕ</span> <span style="color: white">ЗНАЮ</span>
 :::
 
 ## {auto-animate=true, background-color="black"}
-
-::: {.absolute top=200 left=0 width="10000" height="300"}
-<span style="color: red">НЕ</span> ЗНАЮТ ГРАНИЦ ЭТИ ЗЛОУМЫШЛЕННИКИ!
-:::
-
-Как не крутись, а за ними успевать надо... иначе  гг
-
-::: {.absolute top=100 left=50 width="100" height="300"}
-🙂
-:::
-
-## {auto-animate=true, background-color="black"}
-
-::: {.absolute top=390 left=50 width="100" height="300"}
-🙂
-:::
 
 Мы разрабатываем **специализированную экосистему** для работы с контентом по информационной безопасности, которая включает:
 
@@ -92,74 +76,145 @@ format:
 - **Инструменты аналитики** для выявления трендов и связей между угрозами
 
 
-## Актуальность: рост угроз и информации
+## Актуальность {auto-animate=true, background-color="black"}
 
-### Почему это нужно именно сейчас?
+## Актуальность {auto-animate=true, background-color="black"}
 
-**1. Экспоненциальный рост угроз**
+::: {.absolute top=80 left=-100 width="10000" height="300"}
+❕Количество кибератак в растет с каждым днем.
+:::
 
-Количество кибератак в 2025 году выросло на **38 %** по сравнению с предыдущим годом.
+## Актуальность {auto-animate=true, background-color="black"}
 
-**2. Информационный взрыв в сфере ИБ**
+::: {.absolute top=80 left=-100 width="10000" height="300"}
+❕Количество кибератак в растет с каждым днем.
+:::
 
-Ежедневно публикуется:
-- ~50 новых уязвимостей в базе CVE
-- ~200 статей в профильных журналах
-- ~1000 постов в профессиональных блогах
+::: {.absolute top=180 left=-100 width="10000" height="300"}
+❕В условиях санкционного давления критически важна 
 
-**3. Технологический суверенитет**
+собственная инфраструктура знаний по ИБ.
+:::
 
-В условиях санкционного давления критически важна собственная инфраструктура знаний по ИБ.
+## Актуальность {auto-animate=true, background-color="black"}
 
-## Проблема № 1: информационная перегрузка
+::: {.absolute top=80 left=-100 width="10000" height="300"}
+❕Количество кибератак в растет с каждым днем.
+:::
 
-### Специалист по ИБ тратит **до 40 % рабочего времени** на поиск информации:
+::: {.absolute top=180 left=-100 width="10000" height="300"}
+❕В условиях санкционного давления критически важна 
 
-- Мониторинг десятков Telegram‑каналов
-- Чтение рассылок и блогов
-- Поиск по разрозненным базам данных
+собственная инфраструктура знаний по ИБ.
+:::
 
-**Наше решение:**
-- Единая точка входа ко всем релевантным знаниям
-- Автоматическая фильтрация информационного шума
-- Персонализированные подборки материалов
+::: {.absolute top=320 left=-100 width="10000" height="300"}
+❕Еженедельно публикуется:
+:::
 
-## Проблема № 2: разрозненность источников
+::: {.absolute top=360 left=-50 width="10000" height="300"}
+- **~800** новых уязвимостей в базе CVE
 
-### Текущая ситуация: специалист вынужден работать с 7+ разными интерфейсами
+- **~500** статей в профильных журналах
 
-<pre style="font-family: monospace; line-height: 1.5; background-color: rgba(255,255,255,0.1); padding: 15px; border-radius: 5px;">
-            ┌─────────────────┐
-            │  Специалист     │
-            │  по ИБ          │
-            └────────┬────────┘
-                     │
-    ┌────────────────┴────────────────────────────┐
-    ↓            ↓         ↓           ↓          ↓
-   ┌───────┐ ┌───────┐ ┌─────── ┐  ┌─────── ┐  ┌─────── ┐
-   │  CVE  │ │Хабр   │ │Telegram│  │arXiv   │  │Блоги   │
-   │  DB   │ │       │ │каналы  │  │        │  │вендоров│
-   └───────┘ └───────┘ └─────── ┘  └─────── ┘  └─────── ┘
-</pre>
+- **>5000** постов в профессиональных блогах
+:::
 
-**Наше решение:** унификация всех источников в едином формате с единым интерфейсом.
+# Проблематика {background-color="black"}
 
-## Проблема № 3: языковой и культурный барьер
+## Решаемые проблемы{auto-animate=true, background-color="black"}
 
-### Для российских специалистов:
+::: {.r-hstack}
+::: {data-id="box1" auto-animate-delay="0" style="background: #A50000; width: 275px; height: 180px; margin: 10px; border-radius: 20px; padding: 10px"}
+::: {style="text-align: center;"}
+Разрозненные источники информации
+:::
+:::
+:::
 
-- 80 % актуальных исследований — на английском
-- Переводы отсутствуют или низкого качества
-- Западные исследования не учитывают 152‑ФЗ
-- Локальные угрозы слабо освещены
+::: {.r-hstack}
+::: {data-id="box1" auto-animate-delay="0" style="background: #A50000; width: 275px; height: 165px; margin: 10px; border-radius: 20px; padding: 10px"}
+::: {style="text-align: center;"}
+Сложность анализа публикаций
+:::
+:::
+:::
 
-**Наше решение:**
-- Приоритизация русскоязычных источников
-- Адаптация международного опыта
-- Учёт российского законодательства
-- Фокус на локальные угрозы
+## Решаемые проблемы{auto-animate=true, background-color="black"}
 
-## Технологическая концепция
+::: {.r-hstack}
+::: {data-id="box1" auto-animate-delay="0" style="background: #A50000; width: 275px; height: 180px; margin: 10px; border-radius: 20px; padding: 10px"}
+::: {style="text-align: center;"}
+Разрозненные источники информации
+:::
+:::
+
+![](images/arrow.png){width="300" height="180"}
+
+::: {data-id="box1" auto-animate-delay="0" style="background: #00A000; width: 350px; height: 180px; margin: 10px; border-radius: 20px; padding: 10px"}
+::: {style="text-align: center;"}
+Централизованная база знаний
+:::
+:::
+:::
+
+::: {.r-hstack}
+::: {data-id="box1" auto-animate-delay="0" style="background: #A50000; width: 275px; height: 165px; margin: 10px; border-radius: 20px; padding: 10px"}
+::: {style="text-align: center;"}
+Сложность анализа публикаций
+:::
+:::
+
+![](images/arrow.png){width="300" height="180"}
+
+::: {data-id="box1" auto-animate-delay="0" style="background: #00A000; width: 350px; height: 165px; margin: 10px; border-radius: 20px; padding: 10px"}
+::: {style="text-align: center;"}
+Анализирующая ИИ система
+:::
+:::
+:::
+
+::: {.absolute top=0 left=-10000, data-id="box1" style="background: white; width: 0px; height: 1px; border-radius: 200px; margin: -5000px 0 0 -5000px;"}
+:::
+
+## Решаемые проблемы{auto-animate=true, background-color="black"}
+
+::: {.r-hstack}
+::: {data-id="box1" auto-animate-delay="0" style="background: #A50000; width: 275px; height: 180px; margin: 10px; border-radius: 20px; padding: 10px"}
+::: {style="text-align: center;"}
+Разрозненные источники информации
+:::
+:::
+
+![](images/arrow.png){width="300" height="180"}
+
+::: {data-id="box1" auto-animate-delay="0" style="background: #00A000; width: 350px; height: 180px; margin: 10px; border-radius: 20px; padding: 10px"}
+::: {style="text-align: center;"}
+Централизованная база знаний
+:::
+:::
+:::
+
+::: {.r-hstack}
+::: {data-id="box1" auto-animate-delay="0" style="background: #A50000; width: 275px; height: 165px; margin: 10px; border-radius: 20px; padding: 10px"}
+::: {style="text-align: center;"}
+Сложность анализа публикаций
+:::
+:::
+
+![](images/arrow.png){width="300" height="180"}
+
+::: {data-id="box1" auto-animate-delay="0" style="background: #00A000; width: 350px; height: 165px; margin: 10px; border-radius: 20px; padding: 10px"}
+::: {style="text-align: center;"}
+Анализирующая ИИ система
+:::
+:::
+:::
+
+::: {.absolute top=0 left=-10000, data-id="box1" style="background: white; width: 10000px; height: 100000px; border-radius: 200px; margin: -5000px 0 0 -5000px;"}
+:::
+
+# Технологическая концепция
 
 ### Архитектура платформы
 
