@@ -83,13 +83,13 @@ format:
 ## Актуальность {auto-animate=true, background-color="black"}
 
 ::: {.absolute top=80 left=-100 width="10000" height="300"}
-❕Количество кибератак в растет с каждым днем.
+❕Количество кибератак растёт с каждым днём.
 :::
 
 ## Актуальность {auto-animate=true, background-color="black"}
 
 ::: {.absolute top=80 left=-100 width="10000" height="300"}
-❕Количество кибератак в растет с каждым днем.
+❕Количество кибератак растёт с каждым днём.
 :::
 
 ::: {.absolute top=180 left=-100 width="10000" height="300"}
@@ -101,7 +101,7 @@ format:
 ## Актуальность {auto-animate=true, background-color="black"}
 
 ::: {.absolute top=80 left=-100 width="10000" height="300"}
-❕Количество кибератак в растет с каждым днем.
+❕Количество кибератак растёт с каждым днём.
 :::
 
 ::: {.absolute top=180 left=-100 width="10000" height="300"}
