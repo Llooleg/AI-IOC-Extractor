@@ -1,8 +1,8 @@
 ---
 title: "AI IOC Extractor"
 subtitle: "Структурируем профессиональные знания для эффективной защиты"
-author: "..."
-date: "2026-03-11"
+author: "Безлепкин Л.А., Демидов Б.Ю., Лебедев О.Н., Настепанин И.Д., Плохих Г.А."
+date: "2026-03-14"
 format:
   revealjs:
     theme: [custom.scss]
@@ -10,6 +10,8 @@ format:
     transition-speed: slow
     margin: 0.1
     highlight-style: github
+    width: 1600
+    height: 900
 ---
 
 # Актуальность 
@@ -43,24 +45,24 @@ format:
 
 ## {auto-animate=true, background-color="black"}
 
-Мы разрабатываем **специализированную экосистему** для работы с контентом по информационной безопасности, которая включает:
+Мы разрабатываем **специализированное веб-приложение** для работы с контентом по информационной безопасности, которая включает:
 
 ## {auto-animate=true, background-color="black"}
 
-Мы разрабатываем **специализированную экосистему** для работы с контентом по информационной безопасности, которая включает:
+Мы разрабатываем **специализированное веб-приложение** для работы с контентом по информационной безопасности, которая включает:
 
 - **Инструменты аналитики** для выявления трендов и связей между угрозами
 
 ## {auto-animate=true, background-color="black"}
 
-Мы разрабатываем **специализированную экосистему** для работы с контентом по информационной безопасности, которая включает:
+Мы разрабатываем **специализированное веб-приложение** для работы с контентом по информационной безопасности, которая включает:
 
 - **Семантический поиск**, понимающий контекст и смысл запросов
 - **Инструменты аналитики** для выявления трендов и связей между угрозами
 
 ## {auto-animate=true, background-color="black"}
 
-Мы разрабатываем **специализированную экосистему** для работы с контентом по информационной безопасности, которая включает:
+Мы разрабатываем **специализированное веб-приложение** для работы с контентом по информационной безопасности, которая включает:
 
 - **Интеллектуальную систему тегирования** на основе нейросетевых алгоритмов
 - **Семантический поиск**, понимающий контекст и смысл запросов
@@ -68,7 +70,7 @@ format:
 
 ## {auto-animate=true, background-color="black"}
 
-Мы разрабатываем **специализированную экосистему** для работы с контентом по информационной безопасности, которая включает:
+Мы разрабатываем **специализированное веб-приложение** для работы с контентом по информационной безопасности, которая включает:
 
 - **Структурированную базу данных** статей, исследований и аналитических материалов
 - **Интеллектуальную систему тегирования** на основе нейросетевых алгоритмов
@@ -91,9 +93,9 @@ format:
 :::
 
 ::: {.absolute top=180 left=-100 width="10000" height="300"}
-❕В условиях санкционного давления критически важна 
+❕В условиях санкционного давления критически важна собственная инфраструктура 
 
-собственная инфраструктура знаний по ИБ.
+знаний по ИБ.
 :::
 
 ## Актуальность {auto-animate=true, background-color="black"}
@@ -103,9 +105,9 @@ format:
 :::
 
 ::: {.absolute top=180 left=-100 width="10000" height="300"}
-❕В условиях санкционного давления критически важна 
+❕В условиях санкционного давления критически важна собственная инфраструктура
 
-собственная инфраструктура знаний по ИБ.
+ знаний по ИБ.
 :::
 
 ::: {.absolute top=320 left=-100 width="10000" height="300"}
@@ -133,9 +135,17 @@ format:
 :::
 
 ::: {.r-hstack}
-::: {data-id="box1" auto-animate-delay="0" style="background: #A50000; width: 275px; height: 165px; margin: 10px; border-radius: 20px; padding: 10px"}
+::: {data-id="box1" auto-animate-delay="0" style="background: #A50000; width: 275px; height: 180px; margin: 10px; border-radius: 20px; padding: 10px"}
 ::: {style="text-align: center;"}
 Сложность анализа публикаций
+:::
+:::
+:::
+
+::: {.r-hstack}
+::: {data-id="box1" auto-animate-delay="0" style="background: #A50000; width: 275px; height: 230px; margin: 10px; border-radius: 20px; padding: 10px"}
+::: {style="text-align: center;"}
+Незнание технического английского языка
 :::
 :::
 :::
@@ -149,32 +159,64 @@ format:
 :::
 :::
 
-![](images/arrow.png){width="300" height="180"}
+::: {.fragment}
+::: {.r-hstack}
 
-::: {data-id="box1" auto-animate-delay="0" style="background: #00A000; width: 350px; height: 180px; margin: 10px; border-radius: 20px; padding: 10px"}
+![](images/arrow2.png){width="300" height="180"}
+
+::: {data-id="box1" auto-animate-delay="0" style="background: #00A000; width: 370px; height: 180px; margin: 10px; border-radius: 20px; padding-top: 50px"}
 ::: {style="text-align: center;"}
 Централизованная база знаний
 :::
 :::
 :::
+:::
+:::
 
 ::: {.r-hstack}
-::: {data-id="box1" auto-animate-delay="0" style="background: #A50000; width: 275px; height: 165px; margin: 10px; border-radius: 20px; padding: 10px"}
+::: {data-id="box1" auto-animate-delay="0" style="background: #A50000; width: 275px; height: 180px; margin: 10px; border-radius: 20px; padding: 10px"}
 ::: {style="text-align: center;"}
 Сложность анализа публикаций
 :::
 :::
 
-![](images/arrow.png){width="300" height="180"}
+::: {.fragment}
+::: {.r-hstack}
 
-::: {data-id="box1" auto-animate-delay="0" style="background: #00A000; width: 350px; height: 165px; margin: 10px; border-radius: 20px; padding: 10px"}
+![](images/arrow2.png){width="300" height="180"}
+
+::: {data-id="box1" auto-animate-delay="0" style="background: #00A000; width: 370px; height: 180px; margin: 10px; border-radius: 20px; padding-top: 50px"}
 ::: {style="text-align: center;"}
 Анализирующая ИИ система
 :::
 :::
 :::
+:::
+:::
 
-::: {.absolute top=0 left=-10000, data-id="box1" style="background: white; width: 0px; height: 1px; border-radius: 200px; margin: -5000px 0 0 -5000px;"}
+::: {.r-hstack}
+::: {data-id="box1" auto-animate-delay="0" style="background: #A50000; width: 275px; height: 230px; margin: 10px; border-radius: 20px; padding: 10px"}
+::: {style="text-align: center;"}
+Незнание технического английского языка
+:::
+:::
+
+
+::: {.fragment}
+::: {.r-hstack}
+
+![](images/arrow2.png){width="300" height="180"}
+
+::: {data-id="box1" auto-animate-delay="0" style="background: #00A000; width: 370px; height: 230px; margin: 10px; border-radius: 20px; padding-top: 10px"}
+::: {style="text-align: center;"}
+Перевод на основе ИИ, чат для уточнения терминов.
+:::
+:::
+:::
+:::
+:::
+
+::: {.absolute top=-1000 left=-1000, data-id="box1" style="background: white; width: 0px; height: 1px; border-radius: 5000px; margin: -2000px 0 0 -2000px;"}
 :::
 
 ## Решаемые проблемы{auto-animate=true, background-color="black"}
@@ -186,205 +228,192 @@ format:
 :::
 :::
 
-![](images/arrow.png){width="300" height="180"}
+::: {.r-hstack}
 
-::: {data-id="box1" auto-animate-delay="0" style="background: #00A000; width: 350px; height: 180px; margin: 10px; border-radius: 20px; padding: 10px"}
+![](images/arrow2.png){width="300" height="180"}
+
+::: {data-id="box1" auto-animate-delay="0" style="background: #00A000; width: 370px; height: 180px; margin: 10px; border-radius: 20px; padding-top: 50px"}
 ::: {style="text-align: center;"}
 Централизованная база знаний
 :::
 :::
 :::
+:::
 
 ::: {.r-hstack}
-::: {data-id="box1" auto-animate-delay="0" style="background: #A50000; width: 275px; height: 165px; margin: 10px; border-radius: 20px; padding: 10px"}
+::: {data-id="box1" auto-animate-delay="0" style="background: #A50000; width: 275px; height: 180px; margin: 10px; border-radius: 20px; padding: 10px"}
 ::: {style="text-align: center;"}
 Сложность анализа публикаций
 :::
 :::
 
-![](images/arrow.png){width="300" height="180"}
+::: {.r-hstack}
 
-::: {data-id="box1" auto-animate-delay="0" style="background: #00A000; width: 350px; height: 165px; margin: 10px; border-radius: 20px; padding: 10px"}
+![](images/arrow2.png){width="300" height="180"}
+
+::: {data-id="box1" auto-animate-delay="0" style="background: #00A000; width: 370px; height: 180px; margin: 10px; border-radius: 20px; padding-top: 50px"}
 ::: {style="text-align: center;"}
 Анализирующая ИИ система
 :::
 :::
 :::
-
-::: {.absolute top=0 left=-10000, data-id="box1" style="background: white; width: 10000px; height: 100000px; border-radius: 200px; margin: -5000px 0 0 -5000px;"}
 :::
 
-# СТРУКТУРА ПРОЕКТА {background-color="black"}
-
-## {auto-animate=true, background-color="black"}
-
-::: {.absolute top=200 left=0 width="10000" height="300"}
-Как мы создавали AI IOC Extractor
+::: {.r-hstack}
+::: {data-id="box1" auto-animate-delay="0" style="background: #A50000; width: 275px; height: 230px; margin: 10px; border-radius: 20px; padding: 10px"}
+::: {style="text-align: center;"}
+Незнание технического английского языка
+:::
 :::
 
-## {auto-animate=true, background-color="black"}
+
+::: {.r-hstack}
+
+![](images/arrow2.png){width="300" height="180"}
+
+::: {data-id="box1" auto-animate-delay="0" style="background: #00A000; width: 370px; height: 230px; margin: 10px; border-radius: 20px; padding-top: 10px"}
+::: {style="text-align: center;"}
+Перевод на основе ИИ, чат для уточнения терминов.
+:::
+:::
+:::
+:::
+
+::: {.absolute top=-1000 left=-1000, data-id="box1" style="background: white; width: 10000px; height: 10000px; border-radius: 5000px; margin: -2000px 0 0 -2000px;"}
+:::
+
+
+# СТРУКТУРА ПРОЕКТА {background-color="white"}
+
+## План по созданию AI IOC Extractor {auto-animate=true, background-color="white"}
+
+## План по созданию AI IOC Extractor  {auto-animate=true, background-color="white"}
 
 ::: {.absolute top=200 left=0 width="10000" height="300"}
-Как мы создавали AI IOC Extractor
+
 
 **3 ключевых этапа:**
 :::
 
-## {auto-animate=true, background-color="black"}
+## План по созданию AI IOC Extractor {auto-animate=true, background-color="white"}
 
 ::: {.absolute top=200 left=0 width="10000" height="300"}
-Как мы создавали AI IOC Extractor
 
 **3 ключевых этапа:**
 
-1. **Сбор данных** — парсинг arXiv.org и создание базы
+1. **Сбор данных**
 :::
 
-## {auto-animate=true, background-color="black"}
+## План по созданию AI IOC Extractor {auto-animate=true, background-color="whtie"}
 
 ::: {.absolute top=200 left=0 width="10000" height="300"}
-Как мы создавали AI IOC Extractor
 
 **3 ключевых этапа:**
 
-1. **Сбор данных** — парсинг arXiv.org и создание базы
-2. **ИИ-поиск** — обучение нейросети для понимания запросов
+1. **Сбор данных**
+2. **Обучение ИИ, разработка приложения**
 :::
 
-## {auto-animate=true, background-color="black"}
+## План по созданию AI IOC Extractor {auto-animate=true, background-color="white"}
 
 ::: {.absolute top=200 left=0 width="10000" height="300"}
-Как мы создавали AI IOC Extractor
 
 **3 ключевых этапа:**
 
-1. **Сбор данных** — парсинг arXiv.org и создание базы
-2. **ИИ-поиск** — обучение нейросети для понимания запросов
-3. **Веб-сайт** — интерфейс для поиска статей
+1. **Сбор данных** 
+2. **Обучение ИИ, разработка приложения**
+3. **Поддержка жизни приложения**
 :::
 
-# ЭТАП 1: СБОР ДАННЫХ {background-color="black"}
-
-## {auto-animate=true, background-color="black"}
+## ЭТАП 1: СБОР ДАННЫХ {auto-animate=true, background-color="white"}
 
 ::: {.absolute top=150 left=0 width="10000" height="300"}
+На этом этапе нам необходимо подготовить информационную базу для обучения ИИ 
+
+и пополнения библиотеки.
+:::
+
+## ЭТАП 1: СБОР ДАННЫХ {auto-animate=true, background-color="white"}
+
+::: {.absolute top=150 left=0 width="10000" height="300"}
+На этом этапе нам необходимо подготовить информационную базу для обучения ИИ
+
+и пополнения библиотеки.
+
+Для сбора будем использовать язык R и соответствующий пакет aRxiv,
+
+а в качестве СУБД - Mongodb.
+:::
+
+## ЭТАП 1: СБОР ДАННЫХ  {auto-animate=true, background-color="white"}
+
+::: {.absolute top=150 left=0 width="10000" height="300"}
+На этом этапе нам необходимо подготовить информационную базу для обучения ИИ
+
+и пополнения библиотеки.
+
+Для сбора будем использовать язык R и соответствующий пакет aRxiv,
+
+а в качестве СУБД - Mongodb.
+
 **Источник:** arXiv.org
 :::
 
-## {auto-animate=true, background-color="black"}
+## ЭТАП 2: Обучение ИИ, разработка приложения {auto-animate=true, background-color="white"}
 
 ::: {.absolute top=150 left=0 width="10000" height="300"}
-**Источник:** arXiv.org
+На этом этапе мы займемся fine-tuning'ом нейросети и созданием веб-приложения,
 
-**Язык:** R
+ соединяющего ИИ-поиск с базой данных.
 :::
 
-## {auto-animate=true, background-color="black"}
+## ЭТАП 2: Обучение ИИ, разработка приложения {auto-animate=true, background-color="white"}
 
 ::: {.absolute top=150 left=0 width="10000" height="300"}
-**Источник:** arXiv.org
+На этом этапе мы займемся fine-tuning'ом нейросети и созданием веб-приложения, 
 
-**Язык:** R
+соединяющего ИИ-поиск с базой данных.
 
-**Пакеты:** aRxiv, tidyverse, DBI, RSQLite
+**Нейросеть:** Нейросеть Qwen 2.5.
 :::
 
-
-
-
-# ЭТАП 2: ИИ-ПОИСК {background-color="black"}
-
-## {auto-animate=true, background-color="black"}
+## ЭТАП 2: Обучение ИИ, разработка приложения {auto-animate=true, background-color="white"}
 
 ::: {.absolute top=150 left=0 width="10000" height="300"}
-**Задача:** Научить систему понимать смысл запроса
-:::
+На этом этапе мы займемся fine-tuning'ом нейросети и созданием веб-приложения, 
 
-## {auto-animate=true, background-color="black"}
+соединяющего ИИ-поиск с базой данных.
 
-::: {.absolute top=150 left=0 width="10000" height="300"}
-**Задача:** Научить систему понимать смысл запроса
+**Нейросеть:** Нейросеть Qwen 2.5.
 
-**Технология:** Нейросеть ruBERT
-:::
-
-## {auto-animate=true, background-color="black"}
-
-::: {.absolute top=150 left=0 width="10000" height="300"}
-**Задача:** Научить систему понимать смысл запроса
-
-**Технология:** Нейросеть ruBERT
-
-**Язык:** Python
+**Технологии:** H2O llm studio, LoRa, Shiny
 :::
 
 
 
-# ЭТАП 3: ВЕБ-САЙТ {background-color="black"}
-
-## {auto-animate=true, background-color="black"}
+## ЭТАП 3: Поддержка жизни приложения {background-color="white"}
 
 ::: {.absolute top=150 left=0 width="10000" height="300"}
-**Задача:** Сделать поиск доступным через браузер
+На этом этапе мы будем регулярно обновлять базу данных новыми публикациями
+
+ и поддерживать актуальность ИИ-модели.
 :::
 
-## {auto-animate=true, background-color="black"}
+![](images/idk.webp){.absolute top="200" left="700" width="600" height="600"}
 
-::: {.absolute top=150 left=0 width="10000" height="300"}
-**Задача:** Сделать поиск доступным через браузер
+## Ссылки {background-color="white"}
 
-**Технология:** Shiny (веб-фреймворк для R)
-:::
-
-## {auto-animate=true, background-color="black"}
-
-::: {.absolute top=150 left=0 width="10000" height="300"}
-**Задача:** Сделать поиск доступным через браузер
-
-**Технология:** Shiny (веб-фреймворк для R)
-
-**Связка:** R + Python (reticulate)
-:::
-
-# ИТОГИ {background-color="black"}
-
-## {auto-animate=true, background-color="black"}
-
-### Что планируется сделать
-
-**Сбор данных:** Скрипт на R для парсинга arXiv.org (45000+ статей)
-
-**База данных:** 
-
-**ИИ-поиск:** Нейросеть ruBERT для семантического понимания запросов
-
-**Веб-сайт:** Shiny-приложение с интеграцией Python
-
-## {auto-animate=true, background-color="black"}
-
-### Стек технологий
-
-| Этап | Язык | Инструменты |
-|------|------|-------------|
-| Сбор данных | **R** | aRxiv, tidyverse, DBI, RSQLite |
-| ИИ-поиск | **Python** | sentence-transformers, ruBERT |
-| Веб-сайт | **R + Python** | Shiny, reticulate |
-
-## Контакты {background-color="black"}
-
-### Команда проекта «AI IOC Extractor»
+### EG Team
 
 <div style="margin-top: 40px; padding: 20px; background-color: rgba(255, 255, 255, 0.05); border-radius: 8px;">
 
-**GitHub**: https://github.com/Llooleg/AI-IOC-Extractor/tree/Presentation<br>
+**GitHub**: https://github.com/Llooleg/AI-IOC-Extractor<br>
 **Telegram**: https://t.me/+KLvdo-ZnRCpmNDc6
 
 </div>
 
 ---
 
-## {auto-animate=true, background-color="black"}
-
-### Спасибо за внимание!
+# Спасибо за внимание!
 
 Готовы ответить на ваши вопросы.
