@@ -14,7 +14,7 @@ format:
     height: 900
 ---
 
-# Актуальность 
+
 
 ## {auto-animate=true auto-animate-easing="ease-in-out"}
 
@@ -280,6 +280,7 @@ format:
 :::
 
 ::: {.absolute top=-1000 left=-1000, data-id="box1" style="background: white; width: 10000px; height: 10000px; border-radius: 5000px; margin: -2000px 0 0 -2000px;"}
+
 :::
 
 
@@ -412,7 +413,6 @@ format:
 
 </div>
 
----
 
 # Спасибо за внимание!
 
