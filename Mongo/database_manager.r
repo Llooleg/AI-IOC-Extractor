@@ -8,7 +8,6 @@ user <- Sys.getenv("MONGO_USER")
 pass <- Sys.getenv("MONGO_PASS")
 
 mongodb_connection <- function(host, user, pass) {
-  
   if (host == "" || user == "" || pass == "") {
     stop("Ошибка: Переменные окружения не найдены. Проверьте файл .Renviron и перезапустите R.")
   }
