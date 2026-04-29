@@ -1,0 +1,306 @@
+
+/*фон*/
+:root {
+    --bg-url: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAIAAACRXR/mAAAAxXpUWHRSYXcgcHJvZmlsZSB0eXBlIGV4aWYAAHjabVBbDsMgDPvPKXYE8gDCcWjLpN1gx1+AFLXVLOGGOHJNoH0/b3h1EApIzJpKSsEgRQpVKzRM1MEYZPAAk2t478MSyFrcJ+dVk8+ffVwG81Otihcj3V3Y7kIR99eHkf+Ie6Ie4nCjsq/IQ0A3qPNZIRXN1ydsLdyh80AnzsN7mTzvkm17R7QmEzVGDsbMOgNwPwm4WsHGxLYOG4pWI5fB6ElsIf/2dAJ+5xpZHSX0ZzMAAAGFaUNDUElDQyBwcm9maWxlAAB4nH2Rv0vDQBzFX1OlIlURK4g4ZKhOdlERx1LFIlgobYVWHUwu/QVNGpIUF0fBteDgj8Wqg4uzrg6ugiD4A8Q/QJwUXaTE7yWFFjEeHPfh3b3H3TtAaFSYanZFAVWzjFQ8JmZzq2LgFX4MI4hB9EvM1BPpxQw8x9c9fHy9i/As73N/jj4lbzLAJxJHmW5YxBvEs5uWznmfOMRKkkJ8Tjxp0AWJH7kuu/zGueiwwDNDRiY1TxwiFosdLHcwKxkq8QxxWFE1yheyLiuctzirlRpr3ZO/MJjXVtJcpzmGOJaQQBIiZNRQRgUWIrRqpJhI0X7Mwz/q+JPkkslVBiPHAqpQITl+8D/43a1ZmJ5yk4IxoPvFtj/GgcAu0Kzb9vexbTdPAP8zcKW1/dUGMPdJer2thY+AgW3g4rqtyXvA5Q4w8qRLhuRIfppCoQC8n9E35YChW6B3ze2ttY/TByBDXS3fAAeHwESRstc93t3T2du/Z1r9/QBqaXKj5W3mLAAADXZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+Cjx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IlhNUCBDb3JlIDQuNC4wLUV4aXYyIj4KIDxyZGY6UkRGIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyI+CiAgPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIKICAgIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIgogICAgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIKICAgIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIKICAgIHhtbG5zOkdJTVA9Imh0dHA6Ly93d3cuZ2ltcC5vcmcveG1wLyIKICAgIHhtbG5zOnRpZmY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vdGlmZi8xLjAvIgogICAgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIgogICB4bXBNTTpEb2N1bWVudElEPSJnaW1wOmRvY2lkOmdpbXA6Y2Y3MmY4ZjEtMTMxNy00NjkwLTg1N2UtNDJmYzczYTIyYTc4IgogICB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjU0ZWExZDRhLTc3NDctNDk1ZC1iYmFiLTY5N2JmZDFkN2Q5NiIKICAgeG1wTU06T3JpZ2luYWxEb2N1bWVudElEPSJ4bXAuZGlkOjNmNzg5MzJiLWNjNzUtNGJlMS04NmNjLWExYmNkY2U0MGJkZSIKICAgZGM6Rm9ybWF0PSJpbWFnZS9wbmciCiAgIEdJTVA6QVBJPSIyLjAiCiAgIEdJTVA6UGxhdGZvcm09IldpbmRvd3MiCiAgIEdJTVA6VGltZVN0YW1wPSIxNzc0MDk1NTU0ODgzNTQ5IgogICBHSU1QOlZlcnNpb249IjIuMTAuMzgiCiAgIHRpZmY6T3JpZW50YXRpb249IjEiCiAgIHhtcDpDcmVhdG9yVG9vbD0iR0lNUCAyLjEwIgogICB4bXA6TWV0YWRhdGFEYXRlPSIyMDI2OjAzOjIxVDE1OjE5OjExKzAzOjAwIgogICB4bXA6TW9kaWZ5RGF0ZT0iMjAyNjowMzoyMVQxNToxOToxMSswMzowMCI+CiAgIDx4bXBNTTpIaXN0b3J5PgogICAgPHJkZjpTZXE+CiAgICAgPHJkZjpsaQogICAgICBzdEV2dDphY3Rpb249InNhdmVkIgogICAgICBzdEV2dDpjaGFuZ2VkPSIvIgogICAgICBzdEV2dDppbnN0YW5jZUlEPSJ4bXAuaWlkOjhjNWQxNjY2LWVlN2EtNDU3NS05MWZjLWZiNDA5NzA2ZTQwMCIKICAgICAgc3RFdnQ6c29mdHdhcmVBZ2VudD0iR2ltcCAyLjEwIChXaW5kb3dzKSIKICAgICAgc3RFdnQ6d2hlbj0iMjAyNi0wMy0yMVQxNToxOToxNCIvPgogICAgPC9yZGY6U2VxPgogICA8L3htcE1NOkhpc3Rvcnk+CiAgPC9yZGY6RGVzY3JpcHRpb24+CiA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgCjw/eHBhY2tldCBlbmQ9InciPz59zG4iAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH6gMVDBMO1CHayAAAAFpJREFUWMPt2UENgEAQBMEBCYfFTUAUJ5HTwA8HJPuoVlCZ72znec15j3GkTWs9SVJV6VRVpdVOX3tahoWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYX1Yw3/xBfwKQtRGglEqwAAAABJRU5ErkJggg==");
+    --bg-width: 50px;
+    --bg-height: 50px;
+}
+
+
+@keyframes bg-scrolling-reverse {
+    100% { background-position: var(--bg-width) var(--bg-height); }
+}
+
+@keyframes bg-scrolling {
+    0% { background-position: var(--bg-width) var(--bg-height); }
+}
+
+
+body {
+    margin-top: 3.5rem;
+    color: #FFF;
+    font: 400 16px/1.5 exo, ubuntu, "segoe ui", helvetica, arial, sans-serif;
+    text-align: center;
+    background: var(--bg-url) repeat 0 0;
+    
+
+    animation: bg-scrolling-reverse .92s infinite;
+    animation-timing-function: linear;
+}
+
+
+body::before {
+    content: "AI IOC EXTRACTOR";
+    font-size: 8rem;
+    font-weight: 100;
+    font-style: normal;
+    display: block;
+}
+
+
+/*сайдбар*/
+
+.fa-2x { font-size: 2em; }
+.fa {
+    position: relative;
+    display: table-cell;
+    width: 60px;
+    height: 36px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 20px;
+}
+
+.main-menu:hover, nav.main-menu.expanded {
+    width: 250px;
+    overflow: visible;
+}
+
+.main-menu {
+    background: #222; 
+    border-right: 1px solid #555;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    height: 100%;
+    left: 0;
+    width: 60px;
+    overflow: hidden;
+    transition: width .1s linear;
+    z-index: 1000;
+}
+
+.main-menu > ul { margin: 7px 0; }
+
+.main-menu li {
+    position: relative;
+    display: block;
+    width: 250px;
+}
+
+.main-menu li > a {
+    position: relative;
+    display: table;
+    border-collapse: collapse;
+    border-spacing: 0;
+    color: #EEE;
+    font-family: arial;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all .1s linear;
+}
+
+.main-menu .nav-icon {
+    position: relative;
+    display: table-cell;
+    width: 60px;
+    height: 36px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 18px;
+}
+
+.main-menu .nav-text {
+    position: relative;
+    display: table-cell;
+    vertical-align: middle;
+    width: 190px;
+    font-family: 'Titillium Web', sans-serif;
+}
+
+.main-menu > ul.logout {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+}
+
+.main-menu li:hover > a {
+    color: #111;
+    background-color: #FFF; /* Фон при наведении */
+}
+
+nav {
+    user-select: none;
+}
+
+nav ul, nav li {
+    outline: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+
+/*modal style*/
+.modal-content {
+    background-color: #111 !important; 
+    color: #EEE !important;           /* text */
+    border: 1px solid #EEE !important;    /* frame */
+    border-radius: 8px;
+}
+
+/* top line */
+.modal-header {
+    border-bottom: 1px solid #EEE !important;
+}
+
+/* lower line */
+.modal-footer {
+    border-top: 1px solid #EEE !important;
+}
+
+.modal-body {
+    color: #EEE !important;
+}
+
+.dataTables_wrapper, .dataTables_info, .dataTables_paginate, .dataTables_length, .dataTables_filter {
+    color: #FFF !important;
+}
+
+table.dataTable tbody tr {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+table.dataTable tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.dataTables_filter input {
+    background-color: #333 !important;
+    color: #FFF !important;
+    border: 1px solid #555 !important;
+}
+
+
+body .datepicker.datepicker-dropdown.dropdown-menu {
+    background-color: #111 !important;
+    border: 1px solid #EEE !important;
+    color: #FFF !important;
+    z-index: 9999 !important; 
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block; 
+}
+
+
+body .datepicker table tr td, 
+body .datepicker table tr th {
+    color: #FFF !important;
+    background: none !important;
+    border: none !important;
+}
+
+
+body .datepicker table tr td.day {
+    color: #AAA !important; 
+}
+
+body .datepicker table tr td.day:hover {
+    background: #333 !important;
+    color: #FFF !important;
+}
+
+
+body .datepicker table tr td.active, 
+body .datepicker table tr td.active:hover {
+    background-color: #EEE !important;
+    color: #111 !important;
+    border-radius: 4px !important;
+}
+
+
+body .datepicker table tr td.range {
+    background: #444 !important;
+    color: #FFF !important;
+}
+
+
+body .datepicker .prev, 
+body .datepicker .next {
+    filter: invert(1); 
+}
+
+.btn-refresh {
+    background-color: transparent !important;
+    color: #EEE !important;
+    border: 1px solid #EEE !important;
+    padding: 10px 20px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+}
+
+.btn-refresh:hover {
+    background-color: #EEE !important;
+    color: #111 !important;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+#shiny-notification-panel {
+    top: 20px;
+    right: 20px;
+}
+
+.ai-chat-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: #EEE !important;
+    color: #111 !important;
+    border-radius: 50%;
+    box-shadow: 0 4px 15px rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10001;
+    border: none;
+}
+
+.ai-chat-window {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 350px;
+    height: 450px;
+    background: rgba(17, 17, 17, 0.95);
+    border: 1px solid #EEE;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    z-index: 10000;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.chat-header {
+    padding: 10px;
+    border-bottom: 1px solid #444;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+}
+
+.chat-body {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.chat-footer {
+    padding: 10px;
+    border-top: 1px solid #444;
+}
+
+.chat-msg {
+    padding: 8px 12px;
+    border-radius: 8px;
+    max-width: 80%;
+}
+
+.msg-ai { background: #333; align-self: flex-start; }
+.msg-user { background: #EEE; color: #111; align-self: flex-end; }
