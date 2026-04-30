@@ -6,18 +6,18 @@ library(tidyr)
 library(httr2)
 
 db <- mongolite::mongo(
-  collection = "metadata", 
-  db = "cybersecurity_articles", 
-  url = sprintf("mongodb://%s:%s@%s:27017/cybersecurity?authSource=admin", 
-                Sys.getenv("MONGO_USER"), Sys.getenv("MONGO_PASS"), "localhost")
+  collection = "metadata",
+  db = "cybersecurity_articles",
+  url = sprintf("mongodb://%s:%s@%s:27017/cybersecurity?authSource=admin",
+                Sys.getenv("MONGO_USER"), Sys.getenv("MONGO_PASS"), Sys.getenv("MONGO_HOST"))
 )
 
 fetch_data <- function() {
   db <- mongolite::mongo(
-    collection = "metadata", 
-    db = "cybersecurity_articles", 
-    url = sprintf("mongodb://%s:%s@%s:27017/cybersecurity?authSource=admin", 
-                  Sys.getenv("MONGO_USER"), Sys.getenv("MONGO_PASS"), "localhost")
+    collection = "metadata",
+    db = "cybersecurity_articles",
+    url = sprintf("mongodb://%s:%s@%s:27017/cybersecurity?authSource=admin",
+                  Sys.getenv("MONGO_USER"), Sys.getenv("MONGO_PASS"), Sys.getenv("MONGO_HOST"))
   )
   return(db$find('{}'))
 }
@@ -63,7 +63,7 @@ server <- function(input, output, session) {
   observeEvent(input$send_msg, {
     user_text <- input$user_input
     req(user_text)
-    
+    # ПОМЕНЯТЬ КАК ГОТОВ СЕРВ БУДЕТ
     chat_data$history[[length(chat_data$history) + 1]] <- list(role = "user", text = user_text)
     updateTextInput(session, "user_input", value = "")
     tryCatch({
@@ -120,9 +120,10 @@ server <- function(input, output, session) {
   })
 
   filtered_data <- reactive({
-    data <- all_articles
+    data <- v$articles
     if (!is.null(input$date_range)) {
-      data <- data %>% filter(date >= input$date_range[1] & date <= input$date_range[2])
+      data <- data %>% filter(as.Date(date) >= input$date_range[1] & 
+                               as.Date(date) <= input$date_range[2])[cite: 2]
     }
     data
   })
@@ -131,7 +132,7 @@ server <- function(input, output, session) {
     view <- current_view()
     if (view == "chat") {
       tagList(
-        h2("Диалог с AI"),
+        h2("AI Чат"),
         tags$div(class = "full-page-chat",
           tags$div(id = "chat-scroll-area", class = "chat-body-large",
             lapply(chat_data$history, function(m) {
@@ -157,9 +158,9 @@ server <- function(input, output, session) {
     } else if (view == "articles") {
       tagList(
         h2("Библиотека"),
-        dateRangeInput("date_range", "Период публикации:",
-                       start = min(all_articles$date, na.rm = TRUE),
-                       end = max(all_articles$date, na.rm = TRUE),
+        dateRangeInput("date_range", "Временной фильтр:",
+                       start = min(as.Date(all_articles$date), na.rm = TRUE),
+                       end = max(as.Date(all_articles$date), na.rm = TRUE),
                        language = "ru", separator = " : "),
         tags$div(style = "background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px;",
           DTOutput("articles_table")
@@ -173,12 +174,13 @@ server <- function(input, output, session) {
         )
       )
     } else if (view == "article_detail") {
-      article <- all_articles %>% filter(id == selected_id())
+      article <- v$articles %>% filter(id == selected_id())[cite: 2]
       tagList(
         actionButton("back_to_list", " Назад", icon = icon("arrow-left"), class = "btn-secondary"),
         hr(),
         tags$div(class = "article-card",
           h1(article$title),
+          tags$p(tags$b("Тег: "), span(class = "badge", article$tag)),
           tags$p(tags$b("Авторы: "), paste(unlist(article$authors), collapse = ", ")),
           tags$p(tags$b("Дата: "), article$date),
           tags$div(style = "background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; margin-top:20px;",
@@ -191,15 +193,31 @@ server <- function(input, output, session) {
   })
 
   output$articles_table <- renderDT({
-    display_df <- filtered_data() %>% 
-      mutate(authors = sapply(authors, function(x) paste(unlist(x), collapse = ", "))) %>%
-      select(title, authors, date, categories)
-    
-    datatable(display_df, 
+    display_df <- filtered_data() %>%
+      mutate(
+        authors = sapply(authors, function(x) paste(unlist(x), collapse = ", ")),
+        tag = sapply(tag, function(x) if(is.null(x) || is.na(x)) "" else paste(unlist(x), collapse = ", "))
+      ) %>%
+      select(
+        "Название" = title,
+        "Авторы" = authors,
+        "Дата" = date,
+        "Категории" = categories,
+        "Тег" = tag
+      )
+
+    datatable(display_df,
               selection = 'single',
+              filter = 'top',
               options = list(
                 pageLength = 10,
-                search = list(search = topic_filter()) 
+                autoWidth = TRUE,
+                search = list(search = topic_filter()),
+                language = list(
+                  search = "Общий поиск:",
+                  info = "Показано с _START_ по _END_ из _TOTAL_ записей",
+                  paginate = list(previous = "Назад", `next` = "Вперед")
+                )
               )) %>%
       formatStyle(columns = names(display_df), color = '#EEE')
   })
