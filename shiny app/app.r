@@ -121,9 +121,14 @@ server <- function(input, output, session) {
 
   filtered_data <- reactive({
     data <- v$articles
+    
     if (!is.null(input$date_range)) {
-      data <- data %>% filter(as.Date(date) >= input$date_range[1] & 
-                               as.Date(date) <= input$date_range[2])[cite: 2]
+      data <- data %>% 
+        filter(
+          !is.na(date),
+          as.Date(date) >= input$date_range[1],
+          as.Date(date) <= input$date_range[2]
+        )
     }
     data
   })
@@ -156,11 +161,15 @@ server <- function(input, output, session) {
         )
       )
     } else if (view == "articles") {
+      available_dates <- as.Date(all_articles$date[!is.na(all_articles$date)])
+      start_date <- if(length(available_dates) > 0) min(available_dates) else Sys.Date() - 30
+      end_date <- if(length(available_dates) > 0) max(available_dates) else Sys.Date()
+
       tagList(
         h2("Библиотека"),
         dateRangeInput("date_range", "Временной фильтр:",
-                       start = min(as.Date(all_articles$date), na.rm = TRUE),
-                       end = max(as.Date(all_articles$date), na.rm = TRUE),
+                       start = start_date,
+                       end = end_date,
                        language = "ru", separator = " : "),
         tags$div(style = "background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px;",
           DTOutput("articles_table")
@@ -193,10 +202,21 @@ server <- function(input, output, session) {
   })
 
   output$articles_table <- renderDT({
-    display_df <- filtered_data() %>%
+    data_to_display <- filtered_data()
+    if (!"tag" %in% names(data_to_display)) {
+      data_to_display$tag <- NA
+    }
+
+    display_df <- data_to_display %>%
       mutate(
-        authors = sapply(authors, function(x) paste(unlist(x), collapse = ", ")),
-        tag = sapply(tag, function(x) if(is.null(x) || is.na(x)) "" else paste(unlist(x), collapse = ", "))
+        authors = sapply(authors, function(x) {
+          if (is.null(x) || all(is.na(x))) return("")
+          paste(unlist(x), collapse = ", ")
+        }),
+        tag = sapply(tag, function(x) {
+          if (is.null(x) || all(is.na(x))) return("")
+          paste(unlist(x), collapse = ", ")
+        })
       ) %>%
       select(
         "Название" = title,
