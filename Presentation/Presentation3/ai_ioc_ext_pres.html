@@ -245,7 +245,7 @@
 <section id="section-3" class="slide level2" data-auto-animate="true," data-background-color="black">
 <h2 data-id="quarto-animate-title"></h2>
 <div class="r-hstack">
-<div class="absolute" style="top: 100px; left: -150px; width: 10000px; height: 300px; ">
+<div class="absolute" style="top: 100px; left: -50px; width: 10000px; height: 300px; ">
 <p>Технические решения:</p>
 <ul>
 <li><p><strong>PyMuPDF (fitz)</strong> — извлечение текста из PDF</p></li>
@@ -286,7 +286,7 @@
 <section id="section-4" class="slide level2" data-auto-animate="true," data-background-color="black">
 <h2 data-id="quarto-animate-title"></h2>
 <div class="r-hstack">
-<div class="absolute" style="top: 100px; left: -150px; width: 10000px; height: 300px; ">
+<div class="absolute" style="top: 100px; left: -50px; width: 10000px; height: 300px; ">
 <p><strong>Результат</strong> — файл qwen_dataset.jsonl,</p>
 <p>где каждая запись - это готовый диалог</p>
 <p>в формате system/user/assistant,</p>
@@ -363,20 +363,19 @@
 <section id="section-8" class="slide level2" data-auto-animate="true," data-background-color="black">
 <h2 data-id="quarto-animate-title"></h2>
 <div class="r-hstack">
-<div class="absolute" style="top: 100px; left: -150px; width: 10000px; height: 300px; ">
+<div class="absolute" style="top: 100px; left: -50px; width: 10000px; height: 300px; ">
 <p>Ключевые параметры обучения:</p>
 <ul>
 <li><strong>15 эпох</strong> — датасет маленький (1000 примеров),</li>
 </ul>
 <p>нужно много проходов</p>
 <ul>
-<li><strong>Cosine learning rate scheduler</strong> — плавное снижение</li>
+<li><strong>Cosine learning rate scheduler</strong> — плавное</li>
 </ul>
-<p>LR к концу обучения</p>
+<p>снижение LR к концу обучения</p>
 <ul>
-<li><strong>Gradient checkpointing</strong> — экономия VRAM за счёт</li>
+<li><strong>Gradient checkpointing</strong> — экономия VRAM за счёт пересчёта активаций</li>
 </ul>
-<p>пересчёта активаций</p>
 </div>
 </div>
 <div class="r-hstack">
@@ -429,7 +428,7 @@
 <section id="section-11" class="slide level2" data-auto-animate="true," data-background-color="black">
 <h2 data-id="quarto-animate-title"></h2>
 <div class="r-hstack">
-<div class="absolute" style="top: 20px; left: -150px; width: 10000px; height: 300px; ">
+<div class="absolute" style="top: 20px; left: -50px; width: 10000px; height: 300px; ">
 <p>Технические решения:</p>
 <ul>
 <li><strong>future + furrr</strong> - параллельные сессии R</li>
@@ -491,9 +490,9 @@
 <section id="section-12" class="slide level2" data-auto-animate="true," data-background-color="black">
 <h2 data-id="quarto-animate-title"></h2>
 <div class="r-hstack">
-<div class="absolute" style="top: 20px; left: -150px; width: 10000px; height: 300px; ">
-<p>Для ускорения обработки используется параллельное</p>
-<p>выполнение через future + furrr -</p>
+<div class="absolute" style="top: 20px; left: -50px; width: 10000px; height: 300px; ">
+<p>Для ускорения обработки используется</p>
+<p>параллельное выполнение через future + furrr -</p>
 <p>8 воркеров отправляют запросы</p>
 <p>одновременно, соответствуя числу</p>
 <p>параллельных слотов LM Studio.</p>
@@ -535,7 +534,7 @@
 <section id="section-13" class="slide level2" data-auto-animate="true," data-background-color="black">
 <h2 data-id="quarto-animate-title"></h2>
 <div class="r-hstack">
-<div class="absolute" style="top: 20px; left: -150px; width: 10000px; height: 300px; ">
+<div class="absolute" style="top: 20px; left: -50px; width: 10000px; height: 300px; ">
 <p>Результат сохраняется в JSON каждые</p>
 <p>10 батчей с поддержкой продолжения</p>
 <p>с места остановки.</p>
@@ -606,13 +605,13 @@
 <section id="section-16" class="slide level2" data-auto-animate="true," data-background-color="black">
 <h2 data-id="quarto-animate-title"></h2>
 <div class="r-hstack">
-<div class="absolute" style="top: 100px; left: -150px; width: 10000px; height: 300px; ">
+<div class="absolute" style="top: 100px; left: -50px; width: 10000px; height: 300px; ">
 <p>Взаимодействие с базой данных вынесено в</p>
 <p>изолированную функцию <strong>fetch_data()</strong>. Для</p>
 <p>подключения используется пакет mongolite.</p>
 <p>Подключение происходит безопасно:</p>
 <p>учетные данные не зашиты в код, а</p>
-<p>подтягиваются из переменных окружения (Sys.getenv).</p>
+<p>подтягиваются из переменных окружения.</p>
 <p>Функция использует механизм</p>
 <p><strong>on.exit(db$disconnect())</strong>, что гарантирует</p>
 <p>автоматическое закрытие соединения с БД</p>
@@ -648,7 +647,7 @@
 <section id="section-17" class="slide level2" data-auto-animate="true," data-background-color="black">
 <h2 data-id="quarto-animate-title"></h2>
 <div class="r-hstack">
-<div class="absolute" style="top: 100px; left: -150px; width: 10000px; height: 300px; ">
+<div class="absolute" style="top: 100px; left: -50px; width: 10000px; height: 300px; ">
 <p>Приложение объединяет Категории и Теги</p>
 <p>в единый справочник “Разделы”. Поскольку</p>
 <p><strong>MongoDB</strong> часто отдает списки в смешанном</p>
@@ -692,7 +691,7 @@
 </section>
 <section id="section-18" class="slide level2" data-auto-animate="true," data-background-color="black">
 <h2 data-id="quarto-animate-title"></h2>
-<div class="absolute" style="top: 100px; left: -150px; width: 10000px; height: 300px; ">
+<div class="absolute" style="top: 100px; left: -50px; width: 10000px; height: 300px; ">
 <p>Благодаря этому алгоритму в верху списка всегда оказываются статьи,</p>
 <p>наиболее полно удовлетворяющие сложному запросу пользователя.</p>
 </div>
@@ -725,10 +724,10 @@
 <section id="section-20" class="slide level2" data-auto-animate="true," data-background-color="black">
 <h2 data-id="quarto-animate-title"></h2>
 <div class="r-hstack">
-<div class="absolute" style="top: 100px; left: -150px; width: 10000px; height: 300px; ">
+<div class="absolute" style="top: 100px; left: -50px; width: 10000px; height: 300px; ">
 <p>Глобальный чат использует HTTP клиент <strong>httr2</strong>.</p>
-<p>При отправке сообщения создается фоновая задача</p>
-<p>(<strong>future</strong>), которая “обещает” (<strong>promise</strong>)</p>
+<p>При отправке сообщения создается фоновая</p>
+<p>задача(<strong>future</strong>), которая “обещает” (<strong>promise</strong>)</p>
 <p>вернуть ответ. Когда ответ приходит,</p>
 <p>срабатывает оператор %…&gt;%,</p>
 <p>который обновляет UI, не</p>
@@ -795,21 +794,22 @@
 <section id="section-23" class="slide level2" data-auto-animate="true," data-background-color="black">
 <h2 data-id="quarto-animate-title"></h2>
 <div class="r-hstack">
-<div class="absolute" style="top: 100px; left: -150px; width: 10000px; height: 300px; ">
-<p>Приложение упаковывается в Docker с</p>
-<p>установкой необходимых C++ библиотек</p>
+<div class="absolute" style="top: 100px; left: -50px; width: 10000px; height: 300px; ">
+<p>Приложение упаковывается в Docker</p>
+<p>с установкой необходимых библиотек</p>
 <p>(например, zlib1g-dev для mongolite</p>
 <p>и libuv1-dev для асинхронности).</p>
-<p>На самом приложение скрыто за Nginx,</p>
-<p>который выступает в роли Reverse Proxy,</p>
-<p>обеспечивая терминацию SSL (HTTPS) и</p>
-<p>проброс WebSockets, необходимых для</p>
-<p>непрерывного коннекта между браузером и</p>
+<p>На самом приложение скрыто за</p>
+<p>Nginx, который выступает в роли</p>
+<p>Reverse Proxy, обеспечивая</p>
+<p>терминацию SSL (HTTPS) и</p>
+<p>проброс WebSockets, необходимых</p>
+<p>для непрерывного коннекта между браузером и</p>
 <p>Shiny сервером.</p>
 </div>
 </div>
 <div class="r-hstack">
-<div class="absolute" style="top: 20px; left: 650px; width: 500px; height: 300px; ">
+<div class="absolute" style="top: 20px; left: 670px; width: 500px; height: 300px; ">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource yaml number-lines code-with-copy"><code class="sourceCode yaml"><span id="cb10-1"><a href=""></a><span class="fu">version</span><span class="kw">:</span><span class="at"> </span><span class="st">'3.8'</span></span>
 <span id="cb10-2"><a href=""></a><span class="fu">services</span><span class="kw">:</span></span>
 <span id="cb10-3"><a href=""></a><span class="at">  </span><span class="fu">mongodb</span><span class="kw">:</span></span>
