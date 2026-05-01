@@ -99,7 +99,7 @@ ui <- page_navbar(
         card_header(
           class = "bg-primary text-white d-flex justify-content-between align-items-center",
           "Категории и Теги",
-          actionButton("apply_section_filters", "Применить выбранные фильтры", icon = icon("check"), class = "btn-light btn-sm text-primary fw-bold")
+          actionButton("apply_section_filters", "Применить выбранные фильтры", icon = icon("check"), class = "btn-light btn-sm text-primary fw-bold", style = "background-color: white;")
         ),
         card_body(
           DTOutput("sections_table")
@@ -113,7 +113,7 @@ ui <- page_navbar(
       col_widths = 12,
       card(
         height = "80vh",
-        card_header("Глобальный чат с AI Ассистентом", class = "bg-primary text-white"),
+        card_header("AI Чат", class = "bg-primary text-white"),
         card_body(
           class = "overflow-auto",
           uiOutput("chat_history")
@@ -127,8 +127,6 @@ ui <- page_navbar(
       )
     )
   ),
-
-  # Вкладка деталей скрыта по умолчанию и показывается только при клике на статью
   nav_panel(
     title = "Детали статьи", value = "article_detail", icon = icon("file-alt"),
     uiOutput("article_detail_ui")
@@ -173,6 +171,7 @@ server <- function(input, output, session) {
 
     cat_df <- data.frame(id = character(), item = character(), type = character())
     tag_df <- data.frame(id = character(), item = character(), type = character())
+    ctx_df <- data.frame(id = character(), item = character(), type = character())
 
     if ("categories" %in% names(v$articles)) {
       cat_df <- v$articles %>%
@@ -181,15 +180,22 @@ server <- function(input, output, session) {
         unnest(item, keep_empty = FALSE) %>%
         mutate(type = "Категория")
     }
-    if ("tag" %in% names(v$articles)) {
+    if ("tags" %in% names(v$articles)) {
       tag_df <- v$articles %>%
-        select(id, item = tag) %>%
+        select(id, item = tags) %>%
         mutate(item = sanitize_list_col(item)) %>%
         unnest(item, keep_empty = FALSE) %>%
         mutate(type = "Тег")
     }
+    if ("context_tags" %in% names(v$articles)) {
+      ctx_df <- v$articles %>%
+        select(id, item = context_tags) %>%
+        mutate(item = sanitize_list_col(item)) %>%
+        unnest(item, keep_empty = FALSE) %>%
+        mutate(type = "Контекст")
+    }
 
-    bind_rows(cat_df, tag_df) %>%
+    bind_rows(cat_df, tag_df, ctx_df) %>%
       filter(!is.na(item), item != "") %>%
       group_by(item, type) %>%
       summarise(count = n(), .groups = "drop") %>%
@@ -268,11 +274,13 @@ server <- function(input, output, session) {
       match_scores <- sapply(1:nrow(data), function(i) {
         score <- 0
         cat_list <- if ("categories" %in% names(data) && !is.null(data$categories[[i]])) unlist(data$categories[[i]]) else character(0)
-        tag_list <- if ("tag" %in% names(data) && !is.null(data$tag[[i]])) unlist(data$tag[[i]]) else character(0)
+        tag_list <- if ("tags" %in% names(data) && !is.null(data$tags[[i]])) unlist(data$tags[[i]]) else character(0)
+        ctx_list <- if ("context_tags" %in% names(data) && !is.null(data$context_tags[[i]])) unlist(data$context_tags[[i]]) else character(0)
 
         for (j in 1:nrow(filts)) {
           if (filts$type[j] == "Категория" && (filts$value[j] %in% cat_list)) score <- score + 1
           if (filts$type[j] == "Тег" && (filts$value[j] %in% tag_list)) score <- score + 1
+          if (filts$type[j] == "Контекст" && (filts$value[j] %in% ctx_list)) score <- score + 1
         }
         score
       })
@@ -292,7 +300,6 @@ server <- function(input, output, session) {
     data_to_display <- filtered_data()
     req(nrow(data_to_display) > 0)
 
-    if (!"tag" %in% names(data_to_display)) data_to_display$tag <- NA
     if (!"authors" %in% names(data_to_display)) data_to_display$authors <- NA
 
     display_df <- data_to_display %>%
@@ -303,32 +310,50 @@ server <- function(input, output, session) {
           }
           paste(unlist(x), collapse = ", ")
         }),
-        tag = sapply(tag, function(x) {
-          if (is.null(x) || all(is.na(x))) {
-            return("")
+        sections = sapply(1:n(), function(i) {
+          cat_html <- ""
+          if ("categories" %in% names(data_to_display) && !is.null(data_to_display$categories[[i]])) {
+            cat_list <- unlist(data_to_display$categories[[i]])
+            if (length(cat_list) > 0 && !all(is.na(cat_list))) {
+              cat_html <- paste0('<span class="badge bg-success me-1">', cat_list, "</span>", collapse = "")
+            }
           }
-          paste(unlist(x), collapse = ", ")
-        }),
-        categories = sapply(categories, function(x) {
-          if (is.null(x) || all(is.na(x))) {
-            return("")
+
+          tag_html <- ""
+          if ("tags" %in% names(data_to_display) && !is.null(data_to_display$tags[[i]])) {
+            tag_list <- unlist(data_to_display$tags[[i]])
+            if (length(tag_list) > 0 && !all(is.na(tag_list))) {
+              tag_html <- paste0('<span class="badge bg-primary me-1">', tag_list, "</span>", collapse = "")
+            }
           }
-          paste(unlist(x), collapse = ", ")
+
+          ctx_html <- ""
+          if ("context_tags" %in% names(data_to_display) && !is.null(data_to_display$context_tags[[i]])) {
+            ctx_list <- unlist(data_to_display$context_tags[[i]])
+            if (length(ctx_list) > 0 && !all(is.na(ctx_list))) {
+              ctx_html <- paste0('<span class="badge bg-danger me-1">', ctx_list, "</span>", collapse = "")
+            }
+          }
+
+          paste0(cat_html, tag_html, ctx_html)
         })
       )
 
     if ("match_score" %in% names(display_df)) {
-      display_df <- display_df %>% select("Название" = title, "Совпадений" = match_score, "Авторы" = authors, "Дата" = date, "Категории" = categories, "Тег" = tag)
+      display_df <- display_df %>% select("Название" = title, "Совпадений" = match_score, "Авторы" = authors, "Дата" = date, "Разделы" = sections)
     } else {
-      display_df <- display_df %>% select("Название" = title, "Авторы" = authors, "Дата" = date, "Категории" = categories, "Тег" = tag)
+      display_df <- display_df %>% select("Название" = title, "Авторы" = authors, "Дата" = date, "Разделы" = sections)
     }
 
     datatable(display_df,
+      escape = FALSE,
       selection = "single",
       filter = "top",
+      width = "100%",
       options = list(
+        scrollX = TRUE,
         pageLength = 10,
-        autoWidth = TRUE,
+        autoWidth = FALSE,
         language = list(
           search = "Поиск:",
           info = "Показано с _START_ по _END_ из _TOTAL_ записей",
@@ -340,7 +365,7 @@ server <- function(input, output, session) {
 
   output$sections_table <- renderDT({
     req(all_sections())
-    datatable(all_sections(), selection = "multiple", options = list(pageLength = 15, language = list(search = "Поиск:")))
+    datatable(all_sections(), selection = "multiple", options = list(scrollX = TRUE, pageLength = 15, language = list(search = "Поиск:")))
   })
 
   observeEvent(input$apply_section_filters, {
@@ -399,16 +424,23 @@ server <- function(input, output, session) {
         span(class = "badge bg-success me-1", cat)
       })
     }
-    
+
     tags_badges <- list()
-    if ("tag" %in% names(article) && !is.null(article$tag[[1]]) && !all(is.na(article$tag[[1]]))) {
-      tags_badges <- lapply(unlist(article$tag[[1]]), function(t) {
+    if ("tags" %in% names(article) && !is.null(article$tags[[1]]) && !all(is.na(article$tags[[1]]))) {
+      tags_badges <- lapply(unlist(article$tags[[1]]), function(t) {
         span(class = "badge bg-primary me-1", t)
       })
     }
-    
-    sections_display <- tagList(categories_badges, tags_badges)
-    if (length(categories_badges) == 0 && length(tags_badges) == 0) {
+
+    context_tags_badges <- list()
+    if ("context_tags" %in% names(article) && !is.null(article$context_tags[[1]]) && !all(is.na(article$context_tags[[1]]))) {
+      context_tags_badges <- lapply(unlist(article$context_tags[[1]]), function(ctx) {
+        span(class = "badge bg-danger me-1", ctx)
+      })
+    }
+
+    sections_display <- tagList(categories_badges, tags_badges, context_tags_badges)
+    if (length(categories_badges) == 0 && length(tags_badges) == 0 && length(context_tags_badges) == 0) {
       sections_display <- span(class = "text-muted", "Нет разделов")
     }
 
@@ -440,14 +472,14 @@ server <- function(input, output, session) {
       }
 
       card(
-        class = "mt-4 border-info",
+        class = "mt-0 border-info h-100",
         card_header(
           class = "bg-info text-white d-flex justify-content-between align-items-center",
           "Консультация по статье",
-          actionButton("close_article_chat", "Закрыть чат", class = "btn-sm btn-outline-light")
+          actionButton("close_article_chat", "Закрыть чат", class = "btn-sm text-info fw-bold", style = "background-color: white;")
         ),
         card_body(
-          style = "max-height: 300px; overflow-y: auto;",
+          style = "height: 500px; overflow-y: auto;",
           tagList(messages, loading_indicator)
         ),
         card_footer(
@@ -458,27 +490,35 @@ server <- function(input, output, session) {
         )
       )
     } else {
-      div(class = "mt-4", actionButton("init_article_ai", " Начать консультации", icon = icon("robot"), class = "btn-info w-100 fs-5"))
+      div(class = "mt-4", actionButton("init_article_ai", "Начать консультацию", icon = icon("robot"), class = "btn-info w-100 fs-5"))
     }
 
     card(
       card_header(
         class = "d-flex justify-content-between align-items-center bg-primary text-white",
         "Подробная информация",
-        actionButton("back_to_list", " Назад к списку", icon = icon("arrow-left"), class = "btn-light btn-sm text-primary fw-bold")
+        actionButton("back_to_list", " Назад к списку", icon = icon("arrow-left"), class = "btn-light btn-sm text-primary fw-bold", style = "background-color: white;")
       ),
       card_body(
-        h2(article$title),
-        tags$hr(),
-        tags$p(tags$strong("Разделы: "), sections_display),
-        tags$p(tags$strong("Авторы: "), authors_display),
-        tags$p(tags$strong("Дата: "), as.character(article$date)),
-        card(
-          class = "mt-3 border-secondary bg-dark text-white",
-          card_header("Аннотация", class = "text-muted"),
-          card_body(article$abstract)
-        ),
-        article_chat_ui
+        layout_columns(
+          col_widths = c(8, 4),
+          tagList(
+            h2(article$title),
+            tags$hr(),
+            tags$p(tags$strong("Разделы: "), sections_display),
+            tags$p(tags$strong("Авторы: "), authors_display),
+            tags$p(tags$strong("Дата: "), as.character(article$date)),
+            card(
+              class = "mt-3 border-secondary bg-dark text-white",
+              card_header("Аннотация", class = "text-muted"),
+              card_body(article$abstract)
+            )
+          ),
+          div(
+            class = "h-100",
+            article_chat_ui
+          )
+        )
       )
     )
   })
