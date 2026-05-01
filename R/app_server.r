@@ -35,7 +35,7 @@ app_server <- function(input, output, session) {
 
   # Chat history
   chat_data <- shiny::reactiveValues(
-    history = list(list(role = "ai", text = "??????! ? ????? ???????? ?????? ?? ?????????????????."))
+    history = list(list(role = "ai", text = "Hello! I can help answer your questions about cybersecurity."))
   )
 
   # Navigation
@@ -50,13 +50,13 @@ app_server <- function(input, output, session) {
 
   # Refresh DB
   shiny::observeEvent(input$refresh_db, {
-    shiny::withProgress(message = "??????????? ? ???? ??????...", value = 0, {
+    shiny::withProgress(message = "Refreshing database...", value = 0, {
       v$articles <- fetch_data()
       v$last_updated <- Sys.time()
       shiny::setProgress(1)
     })
     shiny::showNotification(
-      sprintf("???? ????????? ? %s", format(v$last_updated, "%H:%M:%S")),
+      sprintf("Database refreshed at %s", format(v$last_updated, "%H:%M:%S")),
       type = "message"
     )
   })
@@ -90,7 +90,7 @@ app_server <- function(input, output, session) {
         httr2::resp_body_json()
 
       resp$choices[[1]]$message$content
-    }, error = function(e) "?????? ??? ????????? ??????.")
+    }, error = function(e) "Sorry, I encountered an error while processing your request.")
 
     chat_data$history[[length(chat_data$history) + 1]] <- list(role = "ai", text = ai_resp)
   })
@@ -132,11 +132,11 @@ app_server <- function(input, output, session) {
         tag = vapply(tag, function(x) paste(unlist(x), collapse = ", "), FUN.VALUE = "")
       ) |>
       dplyr::select(
-        "????????" = title,
-        "??????" = authors,
-        "????" = date,
-        "?????????" = categories,
-        "???" = tag
+        "Title" = title,
+        "Authors" = authors,
+        "Date" = date,
+        "Categories" = categories,
+        "Tag" = tag
       )
 
     DT::datatable(

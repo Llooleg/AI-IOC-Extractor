@@ -9,7 +9,7 @@ pass <- Sys.getenv("MONGO_PASS")
 
 mongodb_connection <- function(host, user, pass) {
   if (host == "" || user == "" || pass == "") {
-    stop("??????: ?????????? ????????? ?? ???????. ????????? ???? .Renviron ? ????????????? R.")
+    stop("Error: Missing MongoDB credentials. Please set them in .Renviron or environment variables.")
   }
   url <- sprintf("mongodb://%s:%s@%s:27017/cybersecurity?authSource=admin", 
                  user, pass, host)
@@ -20,7 +20,6 @@ mongodb_load_json <- function(file_path, collection_obj) {
   raw_data <- jsonlite::fromJSON(file_path, simplifyVector = FALSE)
 
   processed_list <- map(raw_data, function(item) {
-    # ??? ??? ???????????? ????? | ?????? ?? ??????
     if (!is.null(item$authors)) {
       item$authors <- trimws(unlist(strsplit(item$authors, "\\|")))
     }
@@ -28,7 +27,6 @@ mongodb_load_json <- function(file_path, collection_obj) {
       item$categories <- trimws(unlist(strsplit(item$categories, "\\|")))
     }
     
-    # ?????????????? ???
     item$date <- as.POSIXct(item$date, format="%Y-%m-%d", tz="UTC")
     item$datestamp <- as.POSIXct(item$datestamp, format="%Y-%m-%d", tz="UTC")
     
@@ -39,9 +37,9 @@ mongodb_load_json <- function(file_path, collection_obj) {
   json_strings <- sapply(processed_list, function(x) {
     jsonlite::toJSON(x, auto_unbox = TRUE)
   })
-  message("???? ?????????. \n")
+  message("Loading data into MongoDB...\n")
 
   collection_obj$insert(json_strings)
-  message(sprintf("??????? ????????? %d ??????? ? MongoDB", length(json_strings)))
+  message(sprintf("Successfully inserted %d documents into MongoDB", length(json_strings)))
 }
 
