@@ -55,3 +55,6 @@ rsconnect/
 *.json
 /*.csv
 metadata-parser.r
+.Rproj.user
+.log
+.out

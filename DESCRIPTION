@@ -1,0 +1,16 @@
+Package: AIIOCExtractor
+Title: Automatic Academic Analyzer
+Version: 1.0.0.000
+Authors@R: 
+    person("Oleg", "Lebedev", , "helgilebed@gmail.com", role = c("aut", "cre"))
+    person("Bogdan", "Demidov", , "demidov.b.y@internet.ru", role = c("aut", "cre"))
+    person("Leonid", "Bezlepkin", , "leonid4216244@gmail.com", role = c("aut", "cre"))
+    person("Nastepanin", "Ignat", , "ignashechka@gmail.com", role = c("aut", "cre"))
+    person("Gleb", "Plokhyikh", , "pl9khikh@gmail.com", role = c("aut", "cre"))
+Description: This is an academic tool for arXiv articles aggregation.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Imports: mongolite, httr, httr2, aRxiv, dplyr, purrr, jsonlite, xml2, shiny, DT, tidyr
+
