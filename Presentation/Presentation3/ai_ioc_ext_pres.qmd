@@ -56,7 +56,7 @@ all-MiniLM-L6-v2, после чего измеряется косинусное 
 ## {auto-animate=true, background-color="black"}
 
 ::: {.r-hstack}
-::: {.absolute top=100 left=-150 width="10000" height="300"}
+::: {.absolute top=100 left=-50 width="10000" height="300"}
 Технические решения:
 
 - **PyMuPDF (fitz)** — извлечение текста из PDF
@@ -101,7 +101,7 @@ def get_tags(text):
 ## {auto-animate=true, background-color="black"}
 
 ::: {.r-hstack}
-::: {.absolute top=100 left=-150 width="10000" height="300"}
+::: {.absolute top=100 left=-50 width="10000" height="300"}
 **Результат** — файл qwen_dataset.jsonl, 
 
 где каждая запись - это готовый диалог 
@@ -193,20 +193,19 @@ with open(OUTPUT_JSONL, "w", encoding="utf-8") as f:
 ## {auto-animate=true, background-color="black"}
 
 ::: {.r-hstack}
-::: {.absolute top=100 left=-150 width="10000" height="300"}
+::: {.absolute top=100 left=-50 width="10000" height="300"}
 Ключевые параметры обучения:
 
 - **15 эпох** — датасет маленький (1000 примеров), 
 
 нужно много проходов
 
-- **Cosine learning rate scheduler** — плавное снижение
+- **Cosine learning rate scheduler** — плавное 
 
- LR к концу обучения
+снижение LR к концу обучения
 
-- **Gradient checkpointing** — экономия VRAM за счёт 
-
-пересчёта активаций
+- **Gradient checkpointing** — экономия VRAM за
+счёт пересчёта активаций
 
 
 :::
@@ -273,7 +272,7 @@ trainer.train()
 ## {auto-animate=true, background-color="black"}
 
 ::: {.r-hstack}
-::: {.absolute top=20 left=-150 width="10000" height="300"}
+::: {.absolute top=20 left=-50 width="10000" height="300"}
 Технические решения:
 
 - **future + furrr** - параллельные сессии R 
@@ -337,10 +336,10 @@ lm_request <- function(prompt, max_tokens = 80,
 ## {auto-animate=true, background-color="black"}
 
 ::: {.r-hstack}
-::: {.absolute top=20 left=-150 width="10000" height="300"}
-Для ускорения обработки используется параллельное 
+::: {.absolute top=20 left=-50 width="10000" height="300"}
+Для ускорения обработки используется
 
-выполнение через future + furrr - 
+параллельное выполнение через future + furrr - 
 
 8 воркеров отправляют запросы 
 
@@ -387,7 +386,7 @@ process_article <- function(article, lm_url, model_name,
 ## {auto-animate=true, background-color="black"}
 
 ::: {.r-hstack}
-::: {.absolute top=20 left=-150 width="10000" height="300"}
+::: {.absolute top=20 left=-50 width="10000" height="300"}
 Результат сохраняется в JSON каждые 
 
 10 батчей с поддержкой продолжения 
@@ -468,7 +467,7 @@ save_results <- function(results, path) {
 ## {auto-animate=true, background-color="black"}
 
 ::: {.r-hstack}
-::: {.absolute top=100 left=-150 width="10000" height="300"}
+::: {.absolute top=100 left=-50 width="10000" height="300"}
 Взаимодействие с базой данных вынесено в 
 
 изолированную функцию **fetch_data()**. Для 
@@ -479,7 +478,7 @@ save_results <- function(results, path) {
 
 учетные данные не зашиты в код, а 
 
-подтягиваются из переменных окружения (Sys.getenv). 
+подтягиваются из переменных окружения. 
 
 Функция использует механизм 
 
@@ -522,7 +521,7 @@ fetch_data <- function() {
 ## {auto-animate=true, background-color="black"}
 
 ::: {.r-hstack}
-::: {.absolute top=100 left=-150 width="10000" height="300"}
+::: {.absolute top=100 left=-50 width="10000" height="300"}
 Приложение объединяет Категории и Теги 
 
 в единый справочник "Разделы". Поскольку
@@ -578,7 +577,7 @@ match_scores <- sapply(1:nrow(data), function(i) {
 
 ## {auto-animate=true, background-color="black"}
 
-::: {.absolute top=100 left=-150 width="10000" height="300"}
+::: {.absolute top=100 left=-50 width="10000" height="300"}
 Благодаря этому алгоритму в верху списка всегда оказываются статьи, 
 
 наиболее полно удовлетворяющие сложному запросу пользователя.
@@ -619,12 +618,12 @@ Shiny по умолчанию однопоточен. Если бы мы вып�
 ## {auto-animate=true, background-color="black"}
 
 ::: {.r-hstack}
-::: {.absolute top=100 left=-150 width="10000" height="300"}
+::: {.absolute top=100 left=-50 width="10000" height="300"}
 Глобальный чат использует HTTP клиент **httr2**. 
 
-При отправке сообщения создается фоновая задача
+При отправке сообщения создается фоновая
 
-(**future**), которая "обещает" (**promise**) 
+задача(**future**), которая "обещает" (**promise**) 
 
 вернуть ответ. Когда ответ приходит, 
 
@@ -693,11 +692,11 @@ future_promise <- future(
 
 При инициализации чата (SYSTEM_INIT_ANALYSIS) текст статьи скрыто отправляется в 
 
-ИИ-сервис для предварительного анализа. Логика обращения вынесена в функцию-посредник
+ИИ-сервис для предварительного анализа. Логика обращения вынесена в 
 
-ask_article_ai. В текущей версии она содержит симуляцию задержки, но готова к интеграции 
+функцию-посредник ask_article_ai. В текущей версии она содержит симуляцию
 
-с реальным локальным портом (через переменную AI_PAPER_ANALYSIS).
+задержки, но готова к интеграции с реальным локальным портом.
 
 ![](images/chat2.png){width="1400" height="600"}
 :::
@@ -705,31 +704,33 @@ ask_article_ai. В текущей версии она содержит симу�
 ## {auto-animate=true, background-color="black"}
 
 ::: {.r-hstack}
-::: {.absolute top=100 left=-150 width="10000" height="300"}
-Приложение упаковывается в Docker с 
+::: {.absolute top=100 left=-50 width="10000" height="300"}
+Приложение упаковывается в Docker
 
-установкой необходимых C++ библиотек 
+с установкой необходимых библиотек 
 
 (например, zlib1g-dev для mongolite 
 
 и libuv1-dev для асинхронности). 
 
-На самом приложение скрыто за Nginx, 
+На самом приложение скрыто за
 
-который выступает в роли Reverse Proxy, 
+Nginx, который выступает в роли 
 
-обеспечивая терминацию SSL (HTTPS) и 
+Reverse Proxy, обеспечивая 
 
-проброс WebSockets, необходимых для 
+терминацию SSL (HTTPS) и 
 
-непрерывного коннекта между браузером и 
+проброс WebSockets, необходимых
+
+для непрерывного коннекта между браузером и 
 
 Shiny сервером.
 
 :::
 :::
 ::: {.r-hstack}
-::: {.absolute top=20 left=650 width="500" height="300"}
+::: {.absolute top=20 left=670 width="500" height="300"}
 ```{.yaml}
 version: '3.8'
 services:
