@@ -1,0 +1,1 @@
+CS.CR academic papers aggregator. Developed by students at BISO group in MIREA University.
