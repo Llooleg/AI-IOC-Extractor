@@ -53,3 +53,5 @@ rsconnect/
 *.html
 *.csv
 *.json
+/*.csv
+metadata-parser.r
