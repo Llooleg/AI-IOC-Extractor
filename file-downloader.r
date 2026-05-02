@@ -51,7 +51,6 @@ for (i in seq_len(nrow(to_download))) {
   safe_id <- gsub("/", "_", row$id)
   fname   <- paste0(safe_id, ".pdf")
   fpath   <- file.path(download_path, fname)
-  
   pdf_url <- paste0("https://export.arxiv.org/pdf/", row$id, ".pdf")
   
   req <- request(pdf_url) %>%
