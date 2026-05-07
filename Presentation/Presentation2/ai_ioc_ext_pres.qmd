@@ -297,3 +297,256 @@ if (status_code(response) == 503) {
 :::
 
 
+# Load stage
+## {auto-animate=true auto-animate-easing="ease-in-out"}
+
+::: {data-id="box1" style="background: #000000; width: 0px; height: 1px; border-radius: 200px;"}
+:::
+
+::: {.absolute top=100 left=0 width="10000" height="300"}
+После того как получили все метаданные о статьях в формате json, нам надо их 
+
+отформатировать и загрузить в mongodb. 
+
+Сначала инициализируем соединение и создание нужной нам бд с коллекцией 
+
+функцией mongodb_connection. Для этого понадобятся:
+
+
+:::
+
+## {auto-animate=true auto-animate-easing="ease-in-out"}
+
+::: {data-id="box1" style="background: #000000; width: 0px; height: 1px; border-radius: 200px;"}
+:::
+
+::: {.absolute top=100 left=0 width="10000" height="300"}
+После того как получили все метаданные о статьях в формате json, нам надо их 
+
+отформатировать и загрузить в mongodb. 
+
+Сначала инициализируем соединение и создание нужной нам бд с коллекцией 
+
+функцией mongodb_connection. Для этого понадобятся:
+
+- **адрес**
+:::
+
+## {auto-animate=true auto-animate-easing="ease-in-out"}
+
+::: {data-id="box1" style="background: #000000; width: 0px; height: 1px; border-radius: 200px;"}
+:::
+
+::: {.absolute top=100 left=0 width="10000" height="300"}
+После того как получили все метаданные о статьях в формате json, нам надо их 
+
+отформатировать и загрузить в mongodb. 
+
+Сначала инициализируем соединение и создание нужной нам бд с коллекцией 
+
+функцией mongodb_connection. Для этого понадобятся:
+
+- **адрес**
+- **имя пользователя**
+:::
+
+## {auto-animate=true auto-animate-easing="ease-in-out"}
+
+::: {data-id="box1" style="background: #000000; width: 0px; height: 1px; border-radius: 200px;"}
+:::
+
+::: {.absolute top=100 left=0 width="10000" height="300"}
+После того как получили все метаданные о статьях в формате json, нам надо их 
+
+отформатировать и загрузить в mongodb. 
+
+Сначала инициализируем соединение и создание нужной нам бд с коллекцией 
+
+функцией mongodb_connection. Для этого понадобятся:
+
+- **адрес**
+- **имя пользователя**
+- **пароль**
+:::
+
+
+## {auto-animate=true auto-animate-easing="ease-in-out"}
+
+::: {data-id="box1" style="background: #000000; width: 10000px; height: 10000px; border-radius: 200px; margin: -5000px 0 0 -5000px;"}
+:::
+
+::: {.absolute top=100 left=0 width="10000" height="500"}
+**<span style="color: white">Функции для работы с Mongo</span>**
+:::
+
+
+## {auto-animate=true, background-color="black"}
+
+::: {.r-hstack}
+::: {.absolute top=100 left=-150 width="10000" height="300"}
+Функция **mongodb_connection** сначала проверяет, 
+
+что данные не пустые, потом подставляет 
+
+значения в строку, содержащую формат для 
+
+подключения к серверу с монго.
+:::
+:::
+::: {.r-hstack}
+::: {.absolute top=200 left=900 width="750" height="300"}
+```{.r}
+library(mongolite)
+library(jsonlite)
+library(dplyr)
+library(purrr)
+host <- Sys.getenv("MONGO_HOST")
+user <- Sys.getenv("MONGO_USER")
+pass <- Sys.getenv("MONGO_PASS")
+mongodb_connection <- function(host, user, pass) {
+  if (host == "" || user == "" || pass == "") {
+    stop("Ошибка: Переменные окружения не найдены. 
+    Проверьте файл .Renviron и перезапустите R.")
+  }
+  url <- sprintf("mongodb://%s:%s@%s:27017/
+  cybersecurity?authSource=admin", 
+                 user, pass, host)
+  mongolite::mongo(collection = "metadata",
+   db = "cybersecurity_articles", url = url)
+}
+
+```
+:::
+:::
+
+## {auto-animate=true, background-color="black"}
+
+::: {.r-hstack}
+::: {.absolute top=100 left=-150 width="10000" height="300"}
+После использования этой функции у нас остается
+
+сохраненное подключение , которое мы будем 
+
+использовать для манипуляций. Теперь мы можем 
+
+загружать наш файл. Для этого используем
+
+функцию **mongodb_load_json**. Для того чтобы 
+
+подготовить наши данные, надо будет их 
+
+перегнать из json в список, параллельно 
+
+обрабатывая поля, которые надо переделать. 
+
+Даты переделываем в формат, подходящий mongo.
+:::
+:::
+::: {.r-hstack}
+::: {.absolute top=0 left=850 width="850" height="300"}
+```{.r}
+mongodb_load_json <- function(file_path, collection_obj) {
+  raw_data <- jsonlite::fromJSON(file_path, simplifyVector
+   = FALSE)
+  processed_list <- map(raw_data, function(item) {
+    # там где перечисление через | меняем на список
+    if (!is.null(item$authors)) {
+      item$authors <- trimws(unlist(strsplit(
+        item$authors, "\\|")))
+    }
+    if (!is.null(item$categories)) {
+      item$categories <- trimws(unlist(strsplit(
+        item$categories, "\\|")))
+    }
+    # форматирование дат
+    item$date <- as.POSIXct(item$date, 
+    format="%Y-%m-%d", tz="UTC")
+    item$datestamp <- as.POSIXct(item$datestamp,
+    format="%Y-%m-%d", tz="UTC")
+    item$extracted_at <- Sys.time()
+    return(item)
+  })
+  json_strings <- sapply(processed_list,
+   function(x) {
+    jsonlite::toJSON(x, auto_unbox = TRUE)
+  })
+  message("Файл обработан. \n")
+  collection_obj$insert(json_strings)
+  message(sprintf("Успешно загружено %d
+   записей в MongoDB", length(json_strings)))
+}
+```
+:::
+:::
+
+## {auto-animate=true, background-color="black"}
+
+::: {.r-hstack}
+::: {.absolute top=100 left=-150 width="10000" height="300"}
+Вот пример использования, в котором мы 
+
+сначала создаем подключение, а потом, 
+
+используя его, загружаем данные.
+:::
+:::
+::: {.r-hstack}
+::: {.absolute top=200 left=900 width="750" height="300"}
+```{.r}
+con <- mongodb_connection(host, user, pass)
+path <- "Mongo/metadata.json"
+if (file.exists(path)) {
+  mongodb_load_json(path, con)
+} else {
+  message("Файл не найден.")
+}
+```
+:::
+:::
+
+## {auto-animate=true auto-animate-easing="ease-in-out"}
+
+::: {data-id="box1" style="background: #000000; width: 10000px; height: 10000px; border-radius: 200px; margin: -5000px 0 0 -5000px;"}
+:::
+
+::: {.absolute top=100 left=0 width="10000" height="500"}
+**<span style="color: white">Результат работы:</span>**
+
+![](images/result.png){width="1000" height="700"}
+:::
+
+# Заключение
+
+
+## {auto-animate=true auto-animate-easing="ease-in-out"}
+
+::: {data-id="box1" style="background: #000000; width: 0px; height: 1px; border-radius: 200px;"}
+:::
+
+::: {.absolute top=100 left=0 width="10000" height="300"}
+Таким образом, используя инструменты языка R, мы извлекли необходимые нам данные
+
+ с **arxiv.org**, и затем поместили их в нашу базу данных.
+
+ㅤ
+
+На следующем этапе мы проведём обогащение и обработку наших данных,
+
+используя ML инструменты.
+:::
+
+## Ссылки {background-color="white"}
+
+### EG Team
+
+<div style="margin-top: 40px; padding: 20px; background-color: rgba(255, 255, 255, 0.05); border-radius: 8px;">
+
+**GitHub**: https://github.com/Llooleg/AI-IOC-Extractor<br>
+**Telegram**: https://t.me/+KLvdo-ZnRCpmNDc6
+
+</div>
+
+
+# Спасибо за внимание!
+
+Готовы ответить на ваши вопросы.
