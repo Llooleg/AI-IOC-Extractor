@@ -5,9 +5,30 @@ RUN apt-get update -y && apt-get install -y \
     libsasl2-dev \
     libcurl4-openssl-dev \
     libcurl4 \
+    libsodium-dev \
+    libxml2-dev \
+    libfontconfig1-dev \
+    libfreetype6-dev \
+    libpng-dev \
+    libtiff5-dev \
+    libjpeg-dev \
+    libharfbuzz-dev \
+    libfribidi-dev \
+    libuv1-dev \
+    zlib1g-dev \
     && rm -rf /var/lib/apt/lists/*
 
-RUN Rscript -e "install.packages(c('plumber', 'here', 'cli', 'glue', 'purrr', 'mongolite', 'httr2', 'jsonlite', 'promises', 'future'), repos = 'https://cloud.r-project.org')"
+RUN install2.r --error \
+    plumber \
+    here \
+    cli \
+    glue \
+    purrr \
+    mongolite \
+    httr2 \
+    jsonlite \
+    promises \
+    future
 
 WORKDIR /app
 

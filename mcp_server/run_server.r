@@ -19,7 +19,7 @@ cli::cli_rule()
 
 plumber::pr(here("mcp_server", "plumber.r")) |>
   plumber::pr_run(
-    host = "127.0.0.1",
+    host = "0.0.0.0",
     port = port,
     docs = FALSE
   )
