@@ -30,31 +30,46 @@ fetch_data <- function() {
   return(data)
 }
 
-# Функция-заглушка для коннекта к локальному ИИ по конкретной статье
-ask_article_ai <- function(article_text, user_message) {
-  # TODO: В будущем здесь будет реальный вызов к локальной сети на нужный порт
-  # Пример реализации:
-  # resp <- httr2::request(Sys.getenv("AI_PAPER_ANALYSIS")) %>%
-  #   httr2::req_body_json(list(text = article_text, query = user_message)) %>%
-  #   httr2::req_timeout(120) %>%
-  #   httr2::req_perform() %>%
-  #   httr2::resp_body_json()
-  # return(resp$answer)
+# Консультация по конкретной статье через MCP сервер
+# Передаёт контекст статьи и историю чата на /article-chat
+ask_article_ai <- function(article_id, article_title, article_abstract, messages) {
+  mcp_url <- Sys.getenv("MCP_SERVER_URL", unset = "http://127.0.0.1:8000")
 
-  Sys.sleep(1.5)
-  if (user_message == "SYSTEM_INIT_ANALYSIS") {
-    return("Я проанализировал эту статью. Чем могу помочь? Задавайте ваши вопросы по ее содержанию.")
-  } else {
-    return(paste("Ответ локального ИИ по статье на ваш вопрос: '", user_message, "'", sep = ""))
+  resp <- tryCatch(
+    {
+      httr2::request(mcp_url) |>
+        httr2::req_url_path_append("article-chat") |>
+        httr2::req_body_json(list(
+          article_id       = article_id,
+          article_title    = article_title,
+          article_abstract = article_abstract,
+          messages         = messages
+        ), auto_unbox = TRUE) |>
+        httr2::req_timeout(120) |>
+        httr2::req_error(is_error = function(r) FALSE) |>
+        httr2::req_perform() |>
+        httr2::resp_body_json(simplifyVector = FALSE)
+    },
+    error = function(e) list(error = e$message)
+  )
+
+  if (!is.null(resp$error)) {
+    return(paste("Ошибка соединения с AI-сервером:", resp$error))
   }
+  as.character(resp$answer %||% "Пустой ответ от AI-сервера")
 }
 
-ui <- page_navbar(
+# Вспомогательный оператор null-coalescing
+`%||%` <- function(x, y) if (!is.null(x) && length(x) > 0) x else y
+
+main_ui <- page_navbar(
   title = "AI IOC Extractor",
   theme = bs_theme(version = 5, bootswatch = "darkly"),
   bg = "#d4d4d4",
   inverse = FALSE,
   id = "main_nav",
+  nav_spacer(),
+  nav_item(uiOutput("user_profile")),
   nav_panel("Главная",
     value = "home", icon = icon("home"),
     layout_columns(
@@ -133,9 +148,100 @@ ui <- page_navbar(
   )
 )
 
-server <- function(input, output, session) {
-  nav_hide("main_nav", "article_detail")
+login_ui <- page_fillable(
+  theme = bs_theme(version = 5, bootswatch = "darkly"),
+  div(
+    class = "d-flex justify-content-center align-items-center vh-100",
+    card(
+      class = "shadow-lg text-center p-4",
+      style = "max-width: 400px;",
+      h2(class = "mb-4", "Вход в систему"),
+      p(class = "text-muted mb-4", "Пожалуйста, авторизуйтесь через GitHub для доступа к электронной библиотеке"),
+      uiOutput("login_button_ui")
+    )
+  )
+)
 
+ui <- uiOutput("page_ui")
+
+server <- function(input, output, session) {
+  # --- Авторизация GitHub ---
+  client_id <- Sys.getenv("GITHUB_CLIENT_ID")
+  client_secret <- Sys.getenv("GITHUB_CLIENT_SECRET")
+  app_url <- Sys.getenv("APP_URL", unset = "http://127.0.0.1:3838")
+
+  user_data <- reactiveVal(NULL)
+
+  github_auth_url <- paste0(
+    "https://github.com/login/oauth/authorize",
+    "?client_id=", client_id,
+    "&redirect_uri=", app_url,
+    "&scope=user:email"
+  )
+
+  output$login_button_ui <- renderUI({
+    tags$a(
+      href = github_auth_url,
+      class = "btn btn-primary w-100 btn-lg",
+      icon("github"), " Войти через GitHub"
+    )
+  })
+
+  observe({
+    query <- parseQueryString(session$clientData$url_search)
+    if (!is.null(query$code) && is.null(user_data())) {
+      tryCatch(
+        {
+          token_resp <- httr2::request("https://github.com/login/oauth/access_token") |>
+            httr2::req_body_form(
+              client_id = client_id,
+              client_secret = client_secret,
+              code = query$code,
+              redirect_uri = app_url
+            ) |>
+            httr2::req_headers(Accept = "application/json") |>
+            httr2::req_perform() |>
+            httr2::resp_body_json()
+
+          if (!is.null(token_resp$access_token)) {
+            user_resp <- httr2::request("https://api.github.com/user") |>
+              httr2::req_headers(
+                Authorization = paste("Bearer", token_resp$access_token),
+                Accept = "application/vnd.github.v3+json"
+              ) |>
+              httr2::req_perform() |>
+              httr2::resp_body_json()
+
+            user_data(user_resp)
+            updateQueryString("?", mode = "replace")
+          }
+        },
+        error = function(e) {
+          showNotification(paste("Ошибка авторизации:", e$message), type = "error")
+        }
+      )
+    }
+  })
+
+  output$page_ui <- renderUI({
+    if (is.null(user_data())) {
+      login_ui
+    } else {
+      main_ui
+    }
+  })
+
+  output$user_profile <- renderUI({
+    req(user_data())
+    user <- user_data()
+    tags$div(
+      class = "d-flex align-items-center",
+      tags$img(src = user$avatar_url, height = "30px", class = "rounded-circle me-2"),
+      tags$span(user$login, class = "text-white fw-bold")
+    )
+  })
+
+  nav_hide("main_nav", "article_detail")
   # --- Состояние и Реактивность ---
   v <- reactiveValues(
     articles = data.frame(),
@@ -143,6 +249,7 @@ server <- function(input, output, session) {
   )
 
   observe({
+    req(user_data())
     withProgress(message = "Загрузка базы данных...", value = 0.5, {
       v$articles <- tryCatch(
         {
@@ -530,19 +637,31 @@ server <- function(input, output, session) {
 
     current_id <- selected_id()
     idx <- which(as.character(v$articles$id) == as.character(current_id))
-    article_text <- if ("abstract" %in% names(v$articles)) v$articles$abstract[idx[1]] else "Нет текста"
+    art_row <- v$articles[idx[1], ]
+    art_id <- as.character(art_row$id)
+    art_title <- as.character(art_row$title %||% "")
+    art_abstract <- as.character(art_row$abstract %||% "")
+
+    init_msg <- list(list(
+      role    = "user",
+      content = "Привет! Пожалуйста, кратко представь эту статью и скажи, чем ты можешь помочь."
+    ))
 
     future_promise <- future(
       {
         tryCatch(
-          {
-            ask_article_ai(article_text, "SYSTEM_INIT_ANALYSIS")
-          },
-          error = function(e) {
-            paste("Ошибка работы с ИИ:", e$message)
-          }
+          ask_article_ai(art_id, art_title, art_abstract, init_msg),
+          error = function(e) paste("Ошибка работы с ИИ:", e$message)
         )
       },
+      globals = list(
+        ask_article_ai = ask_article_ai,
+        art_id         = art_id,
+        art_title      = art_title,
+        art_abstract   = art_abstract,
+        init_msg       = init_msg,
+        `%||%`         = `%||%`
+      ),
       seed = TRUE
     )
 
@@ -568,17 +687,37 @@ server <- function(input, output, session) {
     updateTextInput(session, "article_user_input", value = "")
     article_chat$is_loading <- TRUE
 
+    # Конвертируем историю чата в формат OpenAI messages
+    current_id <- selected_id()
+    idx <- which(as.character(v$articles$id) == as.character(current_id))
+    art_row <- v$articles[idx[1], ]
+    art_id <- as.character(art_row$id)
+    art_title <- as.character(art_row$title %||% "")
+    art_abstract <- as.character(art_row$abstract %||% "")
+
+    current_history <- article_chat$history
+    oai_messages <- purrr::map(current_history, function(m) {
+      list(
+        role    = if (m$role == "ai") "assistant" else "user",
+        content = m$text
+      )
+    })
+
     future_promise <- future(
       {
         tryCatch(
-          {
-            ask_article_ai("", user_text)
-          },
-          error = function(e) {
-            paste("Ошибка работы с ИИ:", e$message)
-          }
+          ask_article_ai(art_id, art_title, art_abstract, oai_messages),
+          error = function(e) paste("Ошибка работы с ИИ:", e$message)
         )
       },
+      globals = list(
+        ask_article_ai = ask_article_ai,
+        art_id         = art_id,
+        art_title      = art_title,
+        art_abstract   = art_abstract,
+        oai_messages   = oai_messages,
+        `%||%`         = `%||%`
+      ),
       seed = TRUE
     )
 
@@ -635,23 +774,47 @@ server <- function(input, output, session) {
     updateTextInput(session, "user_input", value = "")
     global_chat_data$is_loading <- TRUE
 
+    # Конвертируем историю в формат OpenAI messages (пропускаем первое AI-приветствие)
+    current_history <- global_chat_data$history
+    oai_messages <- purrr::map(
+      current_history[purrr::map_lgl(current_history, ~ .x$role != "ai" || which(purrr::map_chr(current_history, ~ .x$role) == .x$role)[1] > 1)],
+      function(m) list(role = if (m$role == "ai") "assistant" else "user", content = m$text)
+    )
+    # Упрощённый вариант: берём всю историю как есть
+    oai_messages <- purrr::map(current_history, function(m) {
+      list(
+        role    = if (m$role == "ai") "assistant" else "user",
+        content = m$text
+      )
+    })
+
+    mcp_url <- Sys.getenv("MCP_SERVER_URL", unset = "http://127.0.0.1:8000")
+
     future_promise <- future(
       {
         tryCatch(
           {
-            resp <- httr2::request(Sys.getenv("AI_SERVICE_URL")) %>%
-              httr2::req_body_json(list(message = user_text)) %>%
-              httr2::req_timeout(60) %>%
-              httr2::req_perform() %>%
-              httr2::resp_body_json()
+            resp <- httr2::request(mcp_url) |>
+              httr2::req_url_path_append("chat") |>
+              httr2::req_body_json(
+                list(messages = oai_messages),
+                auto_unbox = TRUE
+              ) |>
+              httr2::req_timeout(120) |>
+              httr2::req_error(is_error = function(r) FALSE) |>
+              httr2::req_perform() |>
+              httr2::resp_body_json(simplifyVector = FALSE)
 
-            resp$choices[[1]]$message$content
+            as.character(resp$answer %||% "Пустой ответ от AI-сервера")
           },
-          error = function(e) {
-            paste("Ошибка при обращении к AI-сервису:", e$message)
-          }
+          error = function(e) paste("Ошибка при обращении к AI-сервису:", e$message)
         )
       },
+      globals = list(
+        mcp_url      = mcp_url,
+        oai_messages = oai_messages,
+        `%||%`       = `%||%`
+      ),
       seed = TRUE
     )
 
