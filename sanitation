@@ -1,8 +1,0 @@
-files <- list.files("R", full.names = TRUE)
-
-for (f in files) {
-  txt <- readLines(f, encoding = "UTF-8")
-  txt_clean <- iconv(txt, from = "UTF-8", to = "ASCII//TRANSLIT")
-  writeLines(txt_clean, f, useBytes = TRUE)
-  print(paste("Processed:", f))
-}
