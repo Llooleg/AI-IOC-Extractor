@@ -1,0 +1,120 @@
+---
+title: "Fine-tune Qwen3-8B через Unsloth"
+format: html
+execute:
+  eval: true
+---
+
+# Обучение модели Qwen3-8B на пользовательском датасете
+
+## Подготовка окружения
+
+```r
+install.packages("reticulate")
+
+library(reticulate)
+py_install(c("torch", "unsloth", "transformers", "datasets", "trl"), pip = TRUE)
+```
+
+## Запуск обучения
+
+```{r}
+#Настройки
+MODEL_NAME   <- "qwen/qwen3-8b"
+DATASET_PATH <- "E:/files2/qwen_dataset.jsonl"
+OUTPUT_DIR   <- "E:/output2"
+
+library(reticulate)
+
+py_run_string('
+import os, torch, gc
+os.environ["UNSLOTH_USE_FUSED_CE"] = "1"
+
+gc.collect()
+torch.cuda.empty_cache()
+
+from unsloth import FastLanguageModel
+from unsloth.chat_templates import get_chat_template, standardize_sharegpt
+from trl import SFTTrainer
+from transformers import TrainingArguments
+from datasets import load_dataset
+
+# Получаем переменные из R
+MODEL_NAME   = r.MODEL_NAME
+DATASET_PATH = r.DATASET_PATH
+OUTPUT_DIR   = r.OUTPUT_DIR
+
+model, tokenizer = FastLanguageModel.from_pretrained(
+    model_name     = MODEL_NAME,
+    max_seq_length = 4096,
+    load_in_4bit   = True,
+    dtype          = None,
+)
+
+model = FastLanguageModel.get_peft_model(
+    model,
+    r                          = 64,
+    target_modules             = ["q_proj", "k_proj", "v_proj", "o_proj",
+                                  "gate_proj", "up_proj", "down_proj"],
+    lora_alpha                 = 32,
+    lora_dropout               = 0,
+    bias                       = "none",
+    use_gradient_checkpointing = "unsloth",
+    random_state               = 42,
+)
+
+tokenizer = get_chat_template(tokenizer, chat_template="qwen-2.5")
+
+dataset = load_dataset("json", data_files=DATASET_PATH, split="train")
+dataset = standardize_sharegpt(dataset)
+
+def formatting_func(examples):
+    texts = [
+        tokenizer.apply_chat_template(
+            convo,
+            tokenize              = False,
+            add_generation_prompt = False
+        )
+        for convo in examples["messages"]
+    ]
+    return {"text": texts}
+
+dataset = dataset.map(formatting_func, batched=True)
+
+trainer = SFTTrainer(
+    model              = model,
+    tokenizer          = tokenizer,
+    train_dataset      = dataset,
+    dataset_text_field = "text",
+    max_seq_length     = 4096,
+    dataset_num_proc   = 2,
+    args = TrainingArguments(
+        per_device_train_batch_size = 2,
+        gradient_accumulation_steps = 4,
+        warmup_steps                = 100,
+        num_train_epochs            = 15,
+        learning_rate               = 1e-4,
+        bf16                        = True,
+        fp16                        = False,
+        logging_steps               = 10,
+        optim                       = "adamw_8bit",
+        weight_decay                = 0.01,
+        lr_scheduler_type           = "cosine",
+        seed                        = 42,
+        output_dir                  = OUTPUT_DIR,
+        gradient_checkpointing      = True,
+        save_steps                  = 200,
+        save_total_limit            = 5,
+    ),
+)
+
+print(f"GPU: {torch.cuda.get_device_name(0)}")
+print(f"VRAM free: {(torch.cuda.get_device_properties(0).total_memory - torch.cuda.memory_allocated(0)) / 1e9:.1f} GB")
+
+trainer.train()
+
+model.save_pretrained(OUTPUT_DIR)
+tokenizer.save_pretrained(OUTPUT_DIR)
+print("Gotovo! Model saved to", OUTPUT_DIR)
+')
+```

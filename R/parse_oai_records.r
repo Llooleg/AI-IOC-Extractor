@@ -32,7 +32,8 @@ parse_oai_records <- function(xml_content) {
       authors    = get_all(".//dc:creator"),
       abstract   = get_field(".//dc:description"),
       date       = get_field(".//dc:date"),
-      categories = get_all(".//dc:subject")
+      categories = get_all(".//dc:subject"),
+      url        = get_field(".//dc:identifier[starts-with(text(), 'http')]")
     )
   })
 }
