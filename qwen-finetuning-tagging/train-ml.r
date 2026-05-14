@@ -236,25 +236,25 @@ main <- function() {
   abstracts_all    <- sapply(articles, function(a)
     trimws(if (!is.null(a$abstract)) a$abstract else ""))
 
-  message("Строим TF-IDF словарь...")
-  vectorizer  <- build_vectorizer(c(abstracts_all[nchar(abstracts_all) > 0],
-                                    all_keyword_docs))
-  tfidf_model <- TfIdf$new()
+message("Строим TF-IDF словарь...")
+all_docs_for_vocab <- c(abstracts_all[nchar(abstracts_all) > 0], all_keyword_docs)
+vectorizer <- build_vectorizer(all_docs_for_vocab)
 
-  it_all  <- itoken(c(abstracts_all[nchar(abstracts_all) > 0], all_keyword_docs),
-                    preprocessor = tolower,
-                    tokenizer    = word_tokenizer,
-                    progressbar  = FALSE)
-  dtm_all <- create_dtm(it_all, vectorizer)
-  fit_transform(dtm_all, tfidf_model)
-
-  transform_docs <- function(docs) {
-    it  <- itoken(docs, preprocessor = tolower,
+# Фитим модель ОДИН раз на всём корпусе
+it_all  <- itoken(all_docs_for_vocab, preprocessor = tolower,
                   tokenizer = word_tokenizer, progressbar = FALSE)
-    dtm <- create_dtm(it, vectorizer)
-    transform(dtm, tfidf_model)
-  }
+dtm_all <- create_dtm(it_all, vectorizer)
+tfidf_model <- TfIdf$new()
 
+# fit_transform на всём корпусе — фитит модель И возвращает матрицу (которую выбрасываем)
+fit_transform(dtm_all, tfidf_model)  # side-effect: модель теперь fitted
+
+transform_docs <- function(docs) {
+  it  <- itoken(docs, preprocessor = tolower,
+                tokenizer = word_tokenizer, progressbar = FALSE)
+  dtm <- create_dtm(it, vectorizer)
+  transform(dtm, tfidf_model)  # просто transform, не fit_transform
+}
   message("Трансформируем keyword-векторы...")
   tag_names     <- names(TAG_KEYWORDS)
   context_names <- names(CONTEXT_KEYWORDS)

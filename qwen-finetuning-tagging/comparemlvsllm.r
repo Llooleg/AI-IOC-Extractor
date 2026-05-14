@@ -131,7 +131,28 @@ valid_ids <- common_ids[sapply(common_ids, function(id) {
 
 message(sprintf("Всего общих ID: %d", length(common_ids)))
 message(sprintf("После нормализации к категориям: %d", length(valid_ids)))
+# --- Новые метрики ---
 
+# Есть ли хотя бы одно совпадение (бинарный "зачёт")
+any_hit_fn <- function(pred, ref) {
+  as.integer(length(intersect(pred, ref)) > 0)
+}
+
+# Partial credit: доля совпавших тегов от МЕНЬШЕГО из двух наборов
+# (не наказывает за "лишние" теги в большем наборе)
+partial_credit_fn <- function(pred, ref) {
+  n_inter <- length(intersect(pred, ref))
+  denom   <- min(length(pred), length(ref))
+  if (denom == 0) return(NA_real_)
+  n_inter / denom
+}
+
+# Recall LLM→TF-IDF: сколько LLM-тегов нашлось в TF-IDF
+# (твой кейс: 3 у LLM, 1 у TF-IDF, совпал 1 → recall = 1/3, но any_hit = 1)
+recall_llm_fn <- function(llm, tfidf) {
+  if (length(llm) == 0) return(NA_real_)
+  length(intersect(llm, tfidf)) / length(llm)
+}
 # --- Основные метрики ---
 results_df <- tibble(id = valid_ids) %>%
   rowwise() %>%
@@ -159,7 +180,9 @@ results_df <- tibble(id = valid_ids) %>%
     # Первая категория каждого — для confusion matrix
     llm_top   = llm_cats[1],
     tfidf_top = tfidf_cats[1],
-
+    any_hit       = any_hit_fn(llm_cats, tfidf_cats),
+    partial_credit = partial_credit_fn(llm_cats, tfidf_cats),
+    recall_llm    = recall_llm_fn(llm_cats, tfidf_cats),
     llm_str   = paste(llm_cats,   collapse = ", "),
     tfidf_str = paste(tfidf_cats, collapse = ", ")
   ) %>%
@@ -187,7 +210,12 @@ message(sprintf("TF-IDF даёт больше:         %.1f%%",
   mean(results_df$n_tfidf > results_df$n_llm) * 100))
 message(sprintf("Одинаково:                  %.1f%%",
   mean(results_df$n_llm == results_df$n_tfidf) * 100))
-
+message(sprintf("Any-hit (хоть 1 совпадение): %.1f%%",
+  mean(results_df$any_hit, na.rm = TRUE) * 100))
+message(sprintf("Partial credit среднее:      %.3f",
+  mean(results_df$partial_credit, na.rm = TRUE)))
+message(sprintf("Recall LLM→TF-IDF среднее:  %.3f",
+  mean(results_df$recall_llm, na.rm = TRUE)))
 # --- Графики ---
 
 # 1. F1 распределение
@@ -224,23 +252,43 @@ results_df %>%
 ggsave("n_categories.png", width = 8, height = 5)
 
 # 4. Confusion matrix
-confusion <- results_df %>%
-  filter(!is.na(llm_top), !is.na(tfidf_top)) %>%
-  count(llm_top, tfidf_top) %>%
-  group_by(tfidf_top) %>%
+
+# Разворачиваем все категории каждого документа в пары
+confusion_full <- results_df %>%
+  select(id, llm_cats, tfidf_cats) %>%
+  rowwise() %>%
+  mutate(
+    # Все комбинации тегов для документа
+    pairs = list(expand.grid(
+      llm   = llm_cats,
+      tfidf = tfidf_cats,
+      stringsAsFactors = FALSE
+    ))
+  ) %>%
+  ungroup() %>%
+  select(pairs) %>%
+  tidyr::unnest(pairs)
+
+confusion_agg <- confusion_full %>%
+  count(llm, tfidf) %>%
+  group_by(tfidf) %>%
   mutate(pct = n / sum(n)) %>%
   ungroup()
 
-ggplot(confusion, aes(x = tfidf_top, y = llm_top, fill = pct)) +
+ggplot(confusion_agg, aes(x = tfidf, y = llm, fill = pct)) +
   geom_tile() +
-  geom_text(aes(label = sprintf("%d\n%.0f%%", n, pct*100)), size = 2.8, color = "white") +
-  scale_fill_gradient(low = "#2d2d2d", high = "#69b3a2", labels = scales::percent) +
-  labs(title = "Где методы расходятся",
-       subtitle = "По первой категории каждого метода; % от столбца TF-IDF",
-       x = "TF-IDF категория", y = "LLM категория", fill = "Доля") +
+  geom_text(aes(label = sprintf("%d\n%.0f%%", n, pct * 100)),
+            size = 2.8, color = "white") +
+  scale_fill_gradient(low = "#2d2d2d", high = "#69b3a2",
+                      labels = scales::percent) +
+  labs(
+    title    = "Где методы расходятся (все категории)",
+    subtitle = "Все пары LLM×TF-IDF тегов; % от столбца TF-IDF",
+    x = "TF-IDF категория", y = "LLM категория", fill = "Доля"
+  ) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-ggsave("confusion_categories.png", width = 11, height = 9)
+ggsave("confusion_matrix.png", width = 10, height = 7)
 
 # 5. Jaccard vs F1 (для справки — должны коррелировать)
 ggplot(results_df, aes(x = jaccard, y = f1)) +
