@@ -5,7 +5,7 @@ library(tidyr)
 
 # --- Загрузка ---
 tfidf_raw <- read_json("D:/train-ml/full_tagged_classical.json",      simplifyVector = FALSE)
-llm_raw   <- read_json("D:/train-ml/full_tagged_context_n_tags.json", simplifyVector = FALSE)
+llm_raw   <- read_json("D:/train-ml/full_tagged_final1.json", simplifyVector = FALSE)
 
 llm_map   <- setNames(llm_raw,   sapply(llm_raw,   `[[`, "id"))
 tfidf_map <- setNames(tfidf_raw, sapply(tfidf_raw, `[[`, "id"))
@@ -87,17 +87,24 @@ raw_parent_map[names(TAG_TREE)] <- names(TAG_TREE)
 
 parent_map_norm <- setNames(
   as.character(raw_parent_map),
-  sapply(names(raw_parent_map), function(k) parse_tags(k)[1])
+  sapply(names(raw_parent_map), normalize_key)
 )
 
 # Нормализованные имена категорий (для проверки)
 category_names_norm <- sapply(names(TAG_TREE), function(k) parse_tags(k)[1])
-
+normalize_key <- function(k) {
+  k <- trimws(tolower(k))
+  k <- gsub("\\(.*?\\)", "", k)        # убираем скобки с содержимым
+  k <- gsub("[-_/]", " ", k)           # дефисы и слеши → пробел  
+  k <- gsub("[^a-zа-яё0-9 ]", "", k)  # всё лишнее долой
+  k <- trimws(gsub("\\s+", " ", k))
+  k
+}
 # --- Привести теги к уровню родительских категорий ---
 to_parent_level <- function(tags, pmap) {
   result <- sapply(tags, function(t) {
-    p <- pmap[t]
-    if (!is.na(p)) p else NA_character_   # тег вне таксономии → NA
+    p <- pmap[normalize_key(t)]
+    if (!is.na(p)) p else NA_character_
   }, USE.NAMES = FALSE)
   unique(tolower(result[!is.na(result)]))
 }
@@ -132,7 +139,27 @@ valid_ids <- common_ids[sapply(common_ids, function(id) {
 message(sprintf("Всего общих ID: %d", length(common_ids)))
 message(sprintf("После нормализации к категориям: %d", length(valid_ids)))
 # --- Новые метрики ---
+results_df <- results_df %>%
+  rowwise() %>%
+  mutate(
+    llm_tag1     = parse_tags(llm_map[[id]]$tags)[1],
+    tfidf_tag1   = parse_tags(tfidf_map[[id]]$tags)[1],
+    llm_parent   = lookup_tag(llm_tag1),
+    tfidf_parent = lookup_tag(tfidf_tag1),
+    parent_match = isTRUE(llm_parent == tfidf_parent)
+  ) %>%
+  ungroup()
 
+cat(sprintf("Совпадение родительской категории: %.1f%%\n",
+            mean(results_df$parent_match, na.rm=TRUE) * 100))
+cat(sprintf("LLM теги не в таксономии: %.1f%%\n",
+            mean(is.na(results_df$llm_parent)) * 100))
+cat(sprintf("TF-IDF теги не в таксономии: %.1f%%\n",
+            mean(is.na(results_df$tfidf_parent)) * 100))
+cat(sprintf("LLM теги не в таксономии: %.1f%%\n",
+            mean(is.na(results_df$llm_parent)) * 100))
+cat(sprintf("TF-IDF теги не в таксономии: %.1f%%\n",
+            mean(is.na(results_df$tfidf_parent)) * 100))
 # Есть ли хотя бы одно совпадение (бинарный "зачёт")
 any_hit_fn <- function(pred, ref) {
   as.integer(length(intersect(pred, ref)) > 0)
