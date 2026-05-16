@@ -54,7 +54,7 @@ services:
 
   shiny-ai-ioc:
     build:
-      context: ./shiny_app
+      context: ./shinyapp
       dockerfile: Dockerfile.shiny
     image: shiny-ai-ioc
     container_name: shiny-ai-ioc
