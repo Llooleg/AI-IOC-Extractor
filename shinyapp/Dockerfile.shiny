@@ -1,27 +1,37 @@
-FROM rocker/r-ver:4.3.2
+FROM rocker/r-ver:4.3.3
 
-RUN apt-get update && apt-get install -y \
-    libcurl4-openssl-dev \
+RUN apt-get update -y && apt-get install -y \
     libssl-dev \
     libsasl2-dev \
-    zlib1g-dev \
+    libcurl4-openssl-dev \
+    libcurl4 \
+    libsodium-dev \
+    libxml2-dev \
     libfontconfig1-dev \
     libfreetype6-dev \
     libpng-dev \
     libtiff5-dev \
     libjpeg-dev \
-    libxml2-dev \
     libharfbuzz-dev \
     libfribidi-dev \
     libuv1-dev \
+    zlib1g-dev \
     && rm -rf /var/lib/apt/lists/*
 
-RUN R -e "install.packages(c('shiny', 'bslib', 'mongolite', 'DT', 'dplyr', 'tidyr', 'httr2', 'future', 'promises'), repos='https://cloud.r-project.org/')"
+RUN install2.r --error \
+    shiny \
+    bslib \
+    mongolite \
+    DT \
+    dplyr \
+    tidyr \
+    httr2 \
+    future \
+    promises \
+    purrr
 
 RUN mkdir /app
 COPY . /app/
-
-RUN if [ -f /app/app.r ]; then mv /app/app.r /app/app.R; fi
 
 EXPOSE 3838
 

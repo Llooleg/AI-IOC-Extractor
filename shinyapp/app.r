@@ -69,7 +69,6 @@ main_ui <- page_navbar(
   inverse = FALSE,
   id = "main_nav",
   nav_spacer(),
-  nav_item(uiOutput("user_profile")),
   nav_panel("Главная",
     value = "home", icon = icon("home"),
     layout_columns(
@@ -148,99 +147,9 @@ main_ui <- page_navbar(
   )
 )
 
-login_ui <- page_fillable(
-  theme = bs_theme(version = 5, bootswatch = "darkly"),
-  div(
-    class = "d-flex justify-content-center align-items-center vh-100",
-    card(
-      class = "shadow-lg text-center p-4",
-      style = "max-width: 400px;",
-      h2(class = "mb-4", "Вход в систему"),
-      p(class = "text-muted mb-4", "Пожалуйста, авторизуйтесь через GitHub для доступа к электронной библиотеке"),
-      uiOutput("login_button_ui")
-    )
-  )
-)
-
-ui <- uiOutput("page_ui")
+ui <- main_ui
 
 server <- function(input, output, session) {
-  # --- Авторизация GitHub ---
-  client_id <- Sys.getenv("GITHUB_CLIENT_ID")
-  client_secret <- Sys.getenv("GITHUB_CLIENT_SECRET")
-  app_url <- Sys.getenv("APP_URL", unset = "http://127.0.0.1:3838")
-
-  user_data <- reactiveVal(NULL)
-
-  github_auth_url <- paste0(
-    "https://github.com/login/oauth/authorize",
-    "?client_id=", client_id,
-    "&redirect_uri=", app_url,
-    "&scope=user:email"
-  )
-
-  output$login_button_ui <- renderUI({
-    tags$a(
-      href = github_auth_url,
-      class = "btn btn-primary w-100 btn-lg",
-      icon("github"), " Войти через GitHub"
-    )
-  })
-
-  observe({
-    query <- parseQueryString(session$clientData$url_search)
-    if (!is.null(query$code) && is.null(user_data())) {
-      tryCatch(
-        {
-          token_resp <- httr2::request("https://github.com/login/oauth/access_token") |>
-            httr2::req_body_form(
-              client_id = client_id,
-              client_secret = client_secret,
-              code = query$code,
-              redirect_uri = app_url
-            ) |>
-            httr2::req_headers(Accept = "application/json") |>
-            httr2::req_perform() |>
-            httr2::resp_body_json()
-
-          if (!is.null(token_resp$access_token)) {
-            user_resp <- httr2::request("https://api.github.com/user") |>
-              httr2::req_headers(
-                Authorization = paste("Bearer", token_resp$access_token),
-                Accept = "application/vnd.github.v3+json"
-              ) |>
-              httr2::req_perform() |>
-              httr2::resp_body_json()
-
-            user_data(user_resp)
-            updateQueryString("?", mode = "replace")
-          }
-        },
-        error = function(e) {
-          showNotification(paste("Ошибка авторизации:", e$message), type = "error")
-        }
-      )
-    }
-  })
-
-  output$page_ui <- renderUI({
-    if (is.null(user_data())) {
-      login_ui
-    } else {
-      main_ui
-    }
-  })
-
-  output$user_profile <- renderUI({
-    req(user_data())
-    user <- user_data()
-    tags$div(
-      class = "d-flex align-items-center",
-      tags$img(src = user$avatar_url, height = "30px", class = "rounded-circle me-2"),
-      tags$span(user$login, class = "text-white fw-bold")
-    )
-  })
-
   nav_hide("main_nav", "article_detail")
   # --- Состояние и Реактивность ---
   v <- reactiveValues(
@@ -249,7 +158,6 @@ server <- function(input, output, session) {
   )
 
   observe({
-    req(user_data())
     withProgress(message = "Загрузка базы данных...", value = 0.5, {
       v$articles <- tryCatch(
         {
@@ -774,19 +682,14 @@ server <- function(input, output, session) {
     updateTextInput(session, "user_input", value = "")
     global_chat_data$is_loading <- TRUE
 
-    # Конвертируем историю в формат OpenAI messages (пропускаем первое AI-приветствие)
     current_history <- global_chat_data$history
-    oai_messages <- purrr::map(
-      current_history[purrr::map_lgl(current_history, ~ .x$role != "ai" || which(purrr::map_chr(current_history, ~ .x$role) == .x$role)[1] > 1)],
-      function(m) list(role = if (m$role == "ai") "assistant" else "user", content = m$text)
-    )
-    # Упрощённый вариант: берём всю историю как есть
     oai_messages <- purrr::map(current_history, function(m) {
       list(
         role    = if (m$role == "ai") "assistant" else "user",
         content = m$text
       )
     })
+
 
     mcp_url <- Sys.getenv("MCP_SERVER_URL", unset = "http://127.0.0.1:8000")
 
